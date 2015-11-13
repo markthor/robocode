@@ -1,0 +1,31 @@
+<chromosome id="7656" primary-parent-id="7348"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="6" src-id="2" dest-id="3" weight="0.9438673084297728"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="0" dest-id="167" weight="0.07014276733380376"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<connection id="297" src-id="2" dest-id="296" weight="4.397681962016862"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="427" src-id="425" dest-id="3" weight="0.16971271845792457"/>
+<neuron id="560" type="hid" activation="sigmoid"/>
+<connection id="562" src-id="560" dest-id="3" weight="-3.075113458682844"/>
+<neuron id="690" type="hid" activation="sigmoid"/>
+<connection id="692" src-id="690" dest-id="560" weight="-3.220739809327581"/>
+<connection id="957" src-id="690" dest-id="3" weight="0.4489929676055908"/>
+<neuron id="962" type="hid" activation="sigmoid"/>
+<connection id="964" src-id="962" dest-id="3" weight="1.6014504032475725"/>
+<connection id="1218" src-id="167" dest-id="425" weight="0.9877807631471743"/>
+<neuron id="1479" type="hid" activation="sigmoid"/>
+<connection id="1480" src-id="1" dest-id="1479" weight="0.24685688180773813"/>
+<connection id="1481" src-id="1479" dest-id="962" weight="-6.73465959907638"/>
+<neuron id="1613" type="hid" activation="sigmoid"/>
+<connection id="1614" src-id="296" dest-id="1613" weight="1.0"/>
+<connection id="1615" src-id="1613" dest-id="425" weight="1.626012871580476"/>
+<connection id="1994" src-id="962" dest-id="560" weight="-0.4177155119870086"/>
+<neuron id="2138" type="hid" activation="sigmoid"/>
+<connection id="2139" src-id="167" dest-id="2138" weight="1.2845462910831638"/>
+<connection id="2140" src-id="2138" dest-id="690" weight="-3.867218133653617"/>
+<connection id="7552" src-id="296" dest-id="2138" weight="-1.5260110561432205"/>
+</chromosome>

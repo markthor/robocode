@@ -1,0 +1,34 @@
+<chromosome id="13591" primary-parent-id="11200"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="2.186309121115119"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="0" dest-id="167" weight="-3.8686760576430466"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="426" src-id="296" dest-id="425" weight="4.99546436132022"/>
+<connection id="427" src-id="425" dest-id="3" weight="0.2774745785810857"/>
+<neuron id="560" type="hid" activation="sigmoid"/>
+<connection id="562" src-id="560" dest-id="3" weight="-7.601562965282085"/>
+<neuron id="690" type="hid" activation="sigmoid"/>
+<connection id="691" src-id="167" dest-id="690" weight="-1.3317999495191384"/>
+<neuron id="693" type="hid" activation="sigmoid"/>
+<connection id="694" src-id="2" dest-id="693" weight="-2.8899190616216783"/>
+<neuron id="962" type="hid" activation="sigmoid"/>
+<connection id="963" src-id="1" dest-id="962" weight="-2.800655570281304"/>
+<connection id="964" src-id="962" dest-id="3" weight="-1.7524318676915183"/>
+<connection id="1994" src-id="962" dest-id="560" weight="0.6222485428027369"/>
+<neuron id="2698" type="hid" activation="sigmoid"/>
+<connection id="2700" src-id="2698" dest-id="296" weight="13.626083898315908"/>
+<neuron id="3403" type="hid" activation="sigmoid"/>
+<connection id="3404" src-id="690" dest-id="3403" weight="1.646453297992318"/>
+<connection id="3405" src-id="3403" dest-id="560" weight="-1.022543512345175"/>
+<connection id="3841" src-id="690" dest-id="962" weight="0.41069056432791806"/>
+<connection id="5098" src-id="2" dest-id="3403" weight="-1.5175708017960403"/>
+<connection id="6065" src-id="2698" dest-id="425" weight="2.8514541269312446"/>
+<neuron id="7031" type="hid" activation="sigmoid"/>
+<connection id="7032" src-id="693" dest-id="7031" weight="3.106046861419678"/>
+<connection id="7033" src-id="7031" dest-id="2698" weight="1.0994389425320692"/>
+<connection id="9639" src-id="560" dest-id="2698" weight="-0.872999846824843"/>
+</chromosome>

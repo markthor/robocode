@@ -1,0 +1,16 @@
+<chromosome id="662" primary-parent-id="440"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="5" src-id="1" dest-id="3" weight="-0.6036131933993774"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<connection id="168" src-id="0" dest-id="167" weight="-3.378237731275833"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<connection id="297" src-id="2" dest-id="296" weight="3.254920157439294"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="426" src-id="296" dest-id="425" weight="0.0319275990099539"/>
+<connection id="427" src-id="425" dest-id="3" weight="-4.224758362190107"/>
+<neuron id="560" type="hid" activation="sigmoid"/>
+<connection id="561" src-id="167" dest-id="560" weight="1.5006003758628244"/>
+<connection id="562" src-id="560" dest-id="3" weight="-2.780042226694821"/>
+</chromosome>

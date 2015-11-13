@@ -1,0 +1,32 @@
+<chromosome id="13679" primary-parent-id="10147"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="-0.9059794390375387"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="426" src-id="296" dest-id="425" weight="3.381571738488257"/>
+<connection id="427" src-id="425" dest-id="3" weight="3.913458907565217"/>
+<neuron id="557" type="hid" activation="sigmoid"/>
+<connection id="558" src-id="0" dest-id="557" weight="-3.176992295863016"/>
+<connection id="559" src-id="557" dest-id="167" weight="-3.436319433161504"/>
+<neuron id="560" type="hid" activation="sigmoid"/>
+<connection id="562" src-id="560" dest-id="3" weight="-9.8382426545995"/>
+<neuron id="690" type="hid" activation="sigmoid"/>
+<connection id="691" src-id="167" dest-id="690" weight="5.497079150899021"/>
+<connection id="692" src-id="690" dest-id="560" weight="-0.8177691917799044"/>
+<neuron id="693" type="hid" activation="sigmoid"/>
+<connection id="694" src-id="2" dest-id="693" weight="-0.4213494373759432"/>
+<neuron id="962" type="hid" activation="sigmoid"/>
+<connection id="963" src-id="1" dest-id="962" weight="-0.42292418392385567"/>
+<neuron id="1476" type="hid" activation="sigmoid"/>
+<connection id="1477" src-id="962" dest-id="1476" weight="1.3456259422621366"/>
+<connection id="1478" src-id="1476" dest-id="3" weight="-3.7274349533873488"/>
+<connection id="1738" src-id="962" dest-id="296" weight="-0.6093911808756372"/>
+<neuron id="2698" type="hid" activation="sigmoid"/>
+<connection id="2699" src-id="693" dest-id="2698" weight="1.969341640342795"/>
+<connection id="2700" src-id="2698" dest-id="296" weight="15.15501183777109"/>
+<connection id="3841" src-id="690" dest-id="962" weight="1.887147413851887"/>
+<connection id="5237" src-id="557" dest-id="690" weight="3.585170736897333"/>
+</chromosome>

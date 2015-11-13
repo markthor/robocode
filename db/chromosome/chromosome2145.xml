@@ -1,0 +1,16 @@
+<chromosome id="2145" primary-parent-id="1339"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="-2.927324747973212"/>
+<connection id="5" src-id="1" dest-id="3" weight="3.6673234729811464"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="426" src-id="296" dest-id="425" weight="0.6031151671004804"/>
+<connection id="427" src-id="425" dest-id="3" weight="0.07363419200468335"/>
+<neuron id="693" type="hid" activation="sigmoid"/>
+<connection id="695" src-id="693" dest-id="296" weight="-4.111959108435207"/>
+<neuron id="1220" type="hid" activation="sigmoid"/>
+<connection id="1221" src-id="2" dest-id="1220" weight="3.8718893833857146"/>
+<connection id="1222" src-id="1220" dest-id="693" weight="0.9835213813980945"/>
+</chromosome>

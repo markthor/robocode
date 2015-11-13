@@ -1,0 +1,31 @@
+<chromosome id="13632" primary-parent-id="9129"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="6" src-id="2" dest-id="3" weight="-6.22825823313032"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="426" src-id="296" dest-id="425" weight="5.54474876408994"/>
+<neuron id="557" type="hid" activation="sigmoid"/>
+<connection id="558" src-id="0" dest-id="557" weight="5.303736478326766"/>
+<connection id="559" src-id="557" dest-id="167" weight="-1.1363467346089622"/>
+<neuron id="560" type="hid" activation="sigmoid"/>
+<connection id="561" src-id="167" dest-id="560" weight="0.1077725538156975"/>
+<connection id="685" src-id="296" dest-id="560" weight="-2.7989034674061104"/>
+<neuron id="693" type="hid" activation="sigmoid"/>
+<connection id="694" src-id="2" dest-id="693" weight="-0.5915414507733896"/>
+<connection id="695" src-id="693" dest-id="296" weight="5.447092185956776"/>
+<connection id="821" src-id="560" dest-id="425" weight="-2.6623411800918118"/>
+<neuron id="959" type="hid" activation="sigmoid"/>
+<connection id="960" src-id="560" dest-id="959" weight="-1.5944070109258701"/>
+<connection id="961" src-id="959" dest-id="3" weight="0.8655829824531276"/>
+<neuron id="962" type="hid" activation="sigmoid"/>
+<connection id="963" src-id="1" dest-id="962" weight="1.7583642770841865"/>
+<connection id="964" src-id="962" dest-id="3" weight="-3.4772901390097624"/>
+<neuron id="1090" type="hid" activation="sigmoid"/>
+<connection id="1091" src-id="425" dest-id="1090" weight="1.321657930412068"/>
+<connection id="1092" src-id="1090" dest-id="3" weight="-1.251561375252418"/>
+<connection id="1604" src-id="693" dest-id="167" weight="-4.867657404331341"/>
+<connection id="2401" src-id="1" dest-id="959" weight="-0.19378389735723722"/>
+</chromosome>

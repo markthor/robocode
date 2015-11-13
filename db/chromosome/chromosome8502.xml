@@ -1,0 +1,32 @@
+<chromosome id="8502" primary-parent-id="7944"><neuron id="0" type="in" activation="linear"/>
+<neuron id="1" type="in" activation="linear"/>
+<neuron id="2" type="in" activation="linear"/>
+<neuron id="3" type="out" activation="sigmoid"/>
+<connection id="4" src-id="0" dest-id="3" weight="1.524349093325194"/>
+<neuron id="167" type="hid" activation="sigmoid"/>
+<neuron id="296" type="hid" activation="sigmoid"/>
+<neuron id="425" type="hid" activation="sigmoid"/>
+<connection id="426" src-id="296" dest-id="425" weight="3.875692881783137"/>
+<connection id="427" src-id="425" dest-id="3" weight="2.617000505904196"/>
+<neuron id="557" type="hid" activation="sigmoid"/>
+<connection id="558" src-id="0" dest-id="557" weight="-2.7415564471329907"/>
+<neuron id="560" type="hid" activation="sigmoid"/>
+<connection id="562" src-id="560" dest-id="3" weight="-7.352629508195923"/>
+<neuron id="690" type="hid" activation="sigmoid"/>
+<connection id="691" src-id="167" dest-id="690" weight="-0.10997249879949766"/>
+<connection id="692" src-id="690" dest-id="560" weight="3.124867693674127"/>
+<neuron id="693" type="hid" activation="sigmoid"/>
+<connection id="694" src-id="2" dest-id="693" weight="1.0"/>
+<connection id="821" src-id="560" dest-id="425" weight="3.354801115352707"/>
+<neuron id="962" type="hid" activation="sigmoid"/>
+<connection id="963" src-id="1" dest-id="962" weight="4.130908876101289"/>
+<connection id="964" src-id="962" dest-id="3" weight="-2.1848213593961354"/>
+<connection id="1738" src-id="962" dest-id="296" weight="-0.7056630590996357"/>
+<neuron id="2698" type="hid" activation="sigmoid"/>
+<connection id="2699" src-id="693" dest-id="2698" weight="-0.13645074705665616"/>
+<connection id="2700" src-id="2698" dest-id="296" weight="13.205130290627295"/>
+<neuron id="3701" type="hid" activation="sigmoid"/>
+<connection id="3702" src-id="557" dest-id="3701" weight="1.4550167910128233"/>
+<connection id="3703" src-id="3701" dest-id="167" weight="-5.729611206267275"/>
+<connection id="3841" src-id="690" dest-id="962" weight="1.8026311282381493"/>
+</chromosome>
