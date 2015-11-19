@@ -11,6 +11,7 @@ import robocode.Robot;
 import com.anji.integration.Activator;
 import com.anji.integration.ActivatorTranscriber;
 import com.anji.integration.TranscriberException;
+import com.anji.persistence.Persistence;
 import com.anji.util.Configurable;
 import com.anji.util.Properties;
 import com.itu.mma.robocode.controller.RobocodeController;
@@ -20,6 +21,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 	private static final long serialVersionUID = 4789291203830613376L;
 	private RobocodeController robocodeController;
 	private ActivatorTranscriber activatorFactory;
+	private Persistence db = null;
 
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -27,6 +29,8 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 		List<Chromosome> chromosomes = (List<Chromosome>) subjects;
 		for(Chromosome chromosome : chromosomes) {
 			try {
+				persist(chromosome);
+				
 				Activator network = activatorFactory.newActivator(chromosome);
 				List<Robot> enemies = new ArrayList<Robot>();
 				int totalScore = 0;
@@ -39,6 +43,15 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 			}
 		}
 	}
+	
+	private void persist(Chromosome chromosome) {
+		try {
+			db.store(chromosome);
+		} catch (Exception e) {
+			System.out.println("COULD NOT PERSIST CHROMOSOME");
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public int getMaxFitnessValue() {
@@ -48,6 +61,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 	@Override
 	public void init(Properties properties) throws Exception {
 		activatorFactory = (ActivatorTranscriber) properties.singletonObjectProperty(ActivatorTranscriber.class);
+		db = (Persistence) properties.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		
 	}
 }
