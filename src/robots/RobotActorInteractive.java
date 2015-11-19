@@ -2,29 +2,29 @@ package robots;
 
 import robocode.AdvancedRobot;
 
-import static robots.RobotControlConstants.*;
+import static robots.RobotRulesConstants.*;
 
-public class RobotActorInteractiveInputs extends AdvancedRobot implements RobotActor {
+public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 
 	private static final int numberOfInputs = 11;
 	private static final double extremumMarginPercentage = 0.1;
 	
-	public void act(double[] input) {
-		if(input.length != numberOfInputs) {
-			throw new IllegalArgumentException("Wrong number of inputs. Expected " + numberOfInputs + ", but got " + input.length);
+	public void act(double[] activatorOutput) {
+		if(activatorOutput.length != numberOfInputs) {
+			throw new IllegalArgumentException("Wrong number of inputs. Expected " + numberOfInputs + ", but got " + activatorOutput.length);
 		}
 		
-		double moveForwards 	= input[0];
-		double moveBackwards 	= input[1];
-		double turnGunRight 	= input[2];
-		double turnGunLeft 		= input[3];
-		double turnRobotRight 	= input[4];
-		double turnRobotLeft 	= input[5];
-		double turnRadarRight 	= input[6];
-		double turnRadarLeft 	= input[7];
-		double fire 			= input[8];
-		double firePower 		= input[9];
-		double scan 			= input[10];
+		double moveForwards 	= activatorOutput[0];
+		double moveBackwards 	= activatorOutput[1];
+		double turnGunRight 	= activatorOutput[2];
+		double turnGunLeft 		= activatorOutput[3];
+		double turnRobotRight 	= activatorOutput[4];
+		double turnRobotLeft 	= activatorOutput[5];
+		double turnRadarRight 	= activatorOutput[6];
+		double turnRadarLeft 	= activatorOutput[7];
+		double fire 			= activatorOutput[8];
+		double firePower 		= activatorOutput[9];
+		double scan 			= activatorOutput[10];
 		
 		
 		setMovement(moveForwards, moveBackwards);
