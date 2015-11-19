@@ -1,17 +1,16 @@
 package com.itu.mma.robocode.controller;
 
-import robocode.Robot;
-
-import com.anji.integration.Activator;
+import robocode.control.events.IBattleListener;
 
 public interface RobocodeController {
 	
 	/**
 	 * Run a game with the given network against the given enemy
-	 * @param network The network to use
-	 * @param enemy The robot to battle against
-	 * @return The score achieved against the given enemy
+	 * String format "classname(s).botName" case-sensitive
+	 * @param String The bot to test
+	 * @param String The robot to battle against.
+	 * @return A battle listener to get the results
 	 */
-	public int runGame(Activator network, Robot enemy);
+	public IBattleListener runGame(String testBot, String enemy);
 	
 }
