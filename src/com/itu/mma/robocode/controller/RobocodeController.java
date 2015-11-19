@@ -11,6 +11,6 @@ public interface RobocodeController {
 	 * @param String The robot to battle against.
 	 * @return A battle listener to get the results
 	 */
-	public IBattleListener runGame(String testBot, String enemy);
+	public BattleListener runGame(String testBot, String enemy);
 	
 }

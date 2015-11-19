@@ -1,4 +1,4 @@
-package mikkels;
+package com.itu.mma.robocode.controller;
 
 import control.Runner;
 import robocode.control.events.BattleCompletedEvent;
@@ -15,16 +15,28 @@ import robocode.control.events.TurnEndedEvent;
 import robocode.control.events.TurnStartedEvent;
 
 public class BattleListener implements IBattleListener {
-
+	private int fitness;
+	private boolean finished = false;
+	
+	
 	@Override
 	public void onBattleCompleted(BattleCompletedEvent arg0) {
 		//Save results
-		Runner.setResult();
+		finished  = true;
+		fitness = arg0.getIndexedResults()[0].getScore();
 	}
 
 	@Override
 	public void onBattleError(BattleErrorEvent e) {
 		System.out.println(e.getError());
+	}
+	
+	public int getFitness() {
+		return fitness;
+	}
+	
+	public boolean isFinished() {
+		return finished;
 	}
 
 	@Override
@@ -80,5 +92,8 @@ public class BattleListener implements IBattleListener {
 		// TODO Auto-generated method stub
 
 	}
+
+
+
 
 }
