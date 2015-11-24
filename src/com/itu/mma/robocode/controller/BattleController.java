@@ -4,7 +4,6 @@ import robocode.control.BattleSpecification;
 import robocode.control.BattlefieldSpecification;
 import robocode.control.RobocodeEngine;
 import robocode.control.RobotSpecification;
-import robocode.control.events.IBattleListener;
 
 public class BattleController implements RobocodeController {
 
