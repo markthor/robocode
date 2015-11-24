@@ -22,7 +22,7 @@ import com.itu.mma.robocode.controller.BattleListener;
 import com.itu.mma.robocode.controller.RobocodeController;
 
 public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurable {
-
+	private static Set<String> enemies;
 	private static final long serialVersionUID = 4789291203830613376L;
 	private RobocodeController robocodeController;
 	private ActivatorTranscriber activatorFactory;
@@ -40,9 +40,8 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				
 				Activator network = activatorFactory.newActivator(chromosome);
 				List<Robot> enemies = new ArrayList<Robot>();
-				int totalScore = 0;
-				for(Robot enemy : enemies) {
-					bls.add(robocodeController.runGame(network, enemy));
+				for(String enemy : getEnemies()) {
+					bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
 					//totalScore += robocodeController.runGame(network, enemy);
 				}
 				
@@ -50,12 +49,17 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				int fitness = 0;
 				for (BattleListener bl : bls) {
 					while (!bl.isFinished()) {
-						wait();
+						try {
+							wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					fitness += bl.getFitness();
 				}
 				
-				chromosome.setFitnessValue(totalScore);
+				chromosome.setFitnessValue(fitness);
 			} catch(TranscriberException e) {
 				e.printStackTrace();
 			}
@@ -73,7 +77,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 
 	@Override
 	public int getMaxFitnessValue() {
-		return 10_000;
+		return 10_000_000;
 	}
 
 	@Override
@@ -82,7 +86,10 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 		db = (Persistence) properties.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 	}
 	
-	public Set<String> findEnemies(){
+	public static Set<String> getEnemies(){
+		if (enemies != null) {
+			return enemies;
+		}
 		try {
 			Properties p = new Properties("ranks.properties");
 			return p.stringPropertyNames();
