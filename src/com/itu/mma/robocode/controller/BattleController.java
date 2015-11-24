@@ -4,7 +4,6 @@ import robocode.control.BattleSpecification;
 import robocode.control.BattlefieldSpecification;
 import robocode.control.RobocodeEngine;
 import robocode.control.RobotSpecification;
-import robocode.control.events.IBattleListener;
 
 public class BattleController implements RobocodeController {
 
@@ -17,6 +16,7 @@ public class BattleController implements RobocodeController {
 		
 		engine.addBattleListener(bl);
 		RobotSpecification[] allBots = engine.getLocalRepository();
+		String s = testBot + ", " + enemy;
 		RobotSpecification[] bots = engine.getLocalRepository(testBot + ", " + enemy);
 		
 		//Correct battle spec?
