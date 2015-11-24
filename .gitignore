@@ -13,3 +13,6 @@ bin/
 
 db/
 nevt/
+
+robots/.data
+robots/robot.database
