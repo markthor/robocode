@@ -16,6 +16,7 @@ import com.anji.integration.TranscriberException;
 import com.anji.persistence.Persistence;
 import com.anji.util.Configurable;
 import com.anji.util.Properties;
+import com.itu.mma.robocode.controller.BattleController;
 import com.itu.mma.robocode.controller.BattleListener;
 import com.itu.mma.robocode.controller.RobocodeController;
 
@@ -37,9 +38,11 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				persist(chromosome);
 				
 				Activator network = activatorFactory.newActivator(chromosome);
-				List<Robot> enemies = new ArrayList<Robot>();
+				//List<Robot> enemies = new ArrayList<Robot>();
+				robocodeController = new BattleController();
 				for(String enemy : getEnemies()) {
-					bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
+					bls.add(robocodeController.runGame("robots.RobotController", enemy));
+					//bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
 					//totalScore += robocodeController.runGame(network, enemy);
 				}
 				
@@ -61,6 +64,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 			} catch(TranscriberException e) {
 				e.printStackTrace();
 			}
+			//Activate activator/s
 		}
 	}
 	

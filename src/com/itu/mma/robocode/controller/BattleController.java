@@ -8,13 +8,15 @@ import robocode.control.events.IBattleListener;
 
 public class BattleController implements RobocodeController {
 
+	private static RobocodeEngine _engine;
+	
 	@Override
 	public BattleListener runGame(String testBot, String enemy) {
 		BattleListener bl = new BattleListener();
+		RobocodeEngine engine = getEngine();
 		
-		RobocodeEngine engine = new RobocodeEngine();
 		engine.addBattleListener(bl);
-		
+		RobotSpecification[] allBots = engine.getLocalRepository();
 		RobotSpecification[] bots = engine.getLocalRepository(testBot + ", " + enemy);
 		
 		//Correct battle spec?
@@ -24,5 +26,13 @@ public class BattleController implements RobocodeController {
 		engine.runBattle(bs);
 		
 		return bl;
+	}
+
+	private static RobocodeEngine getEngine() {
+		if(_engine == null){
+			_engine = new RobocodeEngine();
+		}
+		
+		return _engine;
 	}
 }
