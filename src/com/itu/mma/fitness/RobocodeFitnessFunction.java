@@ -41,7 +41,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				//List<Robot> enemies = new ArrayList<Robot>();
 				robocodeController = new BattleController();
 				for(String enemy : getEnemies()) {
-					bls.add(robocodeController.runGame("robots.SimpleRobotController", enemy));
+					bls.add(robocodeController.runGame("robots.RobotController", enemy));
 					//bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
 					//totalScore += robocodeController.runGame(network, enemy);
 				}
