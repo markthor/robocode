@@ -6,10 +6,8 @@ public class SimpleRobotController extends Robot {
 
 	@Override
 	public void run() {
-		while(true) {
-			ahead(10.0);
-			turnRight(30.0);
-		}
+		ahead(10.0);
+		turnRight(30.0);
 	}
 
 }

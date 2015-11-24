@@ -50,7 +50,7 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 		double[] results = new double[numberOfRangeFinders];
 		double angle = 360.0/numberOfRangeFinders;
 		for(int i = 0; i < results.length; i++) {
-			results[i] = scaleDistance(getDistanceToWall(getHeading()+i*angle));
+			results[i] = scaleDistance(getDistanceToWall(i*angle));
 		}
 		return results;
 	}
@@ -61,52 +61,52 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 		
 		// First quarter (clockwise from 12 o'clock)
 		if(absoluteAngle < 90) {
-			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			adjacentOppositeFactor = Math.cos(degreesToRadians(absoluteAngle))/Math.sin(degreesToRadians(absoluteAngle));
 			deltaX = getBattleFieldWidth()-getX();
 			deltaY = getBattleFieldHeight()-getY();
 			deltaXYFactor = deltaX/deltaY;
 			
 			if(adjacentOppositeFactor < deltaXYFactor) {
-				return deltaY/Math.sin(absoluteAngle);
+				return deltaX/Math.sin(degreesToRadians(absoluteAngle));
 			} else {
-				return deltaX/Math.cos(absoluteAngle);
+				return deltaY/Math.cos(degreesToRadians(absoluteAngle));
 			}
 		// Second quarter
 		} else if(absoluteAngle <= 180 ) {
 			absoluteAngle -= 90;
-			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			adjacentOppositeFactor = Math.cos(degreesToRadians(absoluteAngle))/Math.sin(degreesToRadians(absoluteAngle));
 			deltaX = getBattleFieldWidth()-getX();
 			deltaY = getY();
 			deltaXYFactor = deltaX/deltaY;
 			
 			if(adjacentOppositeFactor < deltaXYFactor) {
-				return deltaY/Math.sin(absoluteAngle);
+				return deltaY/Math.sin(degreesToRadians(absoluteAngle));
 			} else {
-				return deltaX/Math.cos(absoluteAngle);
+				return deltaX/Math.cos(degreesToRadians(absoluteAngle));
 			}
 		// Third quarter
 		} else if(absoluteAngle <= 270) {
 			absoluteAngle -= 180.0;
-			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			adjacentOppositeFactor = Math.cos(degreesToRadians(absoluteAngle))/Math.sin(degreesToRadians(absoluteAngle));
 			deltaX = getX();
 			deltaY = getY();
 			deltaXYFactor = deltaX/deltaY;
 			if(adjacentOppositeFactor < deltaXYFactor) {
-				return deltaY/Math.sin(absoluteAngle);
+				return deltaX/Math.sin(degreesToRadians(absoluteAngle));
 			} else {
-				return deltaX/Math.cos(absoluteAngle);
+				return deltaY/Math.cos(degreesToRadians(absoluteAngle));
 			}
 		// Fourth quarter
 		} else {
 			absoluteAngle -= 270.0;
-			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			adjacentOppositeFactor = Math.cos(degreesToRadians(absoluteAngle))/Math.sin(degreesToRadians(absoluteAngle));
 			deltaX = getX();
 			deltaY = getBattleFieldHeight()-getY();
 			deltaXYFactor = deltaX/deltaY;
 			if(adjacentOppositeFactor < deltaXYFactor) {
-				return deltaY/Math.sin(absoluteAngle);
+				return deltaY/Math.sin(degreesToRadians(absoluteAngle));
 			} else {
-				return deltaX/Math.cos(absoluteAngle);
+				return deltaX/Math.cos(degreesToRadians(absoluteAngle));
 			}
 		}
 	}
@@ -236,5 +236,9 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 	
 	private double booleanToDouble(boolean bool) {
 		return bool ? 1.0 : 0.0;
+	}
+	
+	private double degreesToRadians(double degrees) {
+		return (degrees * Math.PI) / 180;
 	}
 }

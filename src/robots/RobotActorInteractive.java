@@ -33,8 +33,6 @@ public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 		setRadarRotation(turnRadarRight, turnRadarLeft);
 		setFire(fire, firePower);
 		setScan(scan);
-		
-		execute();
 	}
 	
 	private void setMovement(double forward, double backward) {

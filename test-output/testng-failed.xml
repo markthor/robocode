@@ -5,7 +5,7 @@
     <classes>
       <class name="robots.test.testRobotController">
         <methods>
-          <include name="testSimpleInputOutput"/>
+          <include name="testSimpleOutput"/>
         </methods>
       </class> <!-- robots.test.testRobotController -->
     </classes>
