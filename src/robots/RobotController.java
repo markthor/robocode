@@ -18,20 +18,13 @@ public class RobotController extends AdvancedRobot implements Configurable {
 	private RobotActor actor;
 	private RobotSensor sensor;
 	private Activator activator;
-	
-	{
-	}
+	private Long chromosomeId;
 	
 	public RobotController(RobotActor actor, RobotSensor sensor, Long chromosomeId) {
 		super();
 		this.actor = actor;
 		this.sensor = sensor;
-		try {
-			activator = loadActivator(chromosomeId);
-		} catch(TranscriberException e) {
-			//TODO: Handle error
-			e.printStackTrace();
-		}
+		this.chromosomeId = chromosomeId;
 	}
 	
 	public void run() {
@@ -55,5 +48,11 @@ public class RobotController extends AdvancedRobot implements Configurable {
 		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		activatorFactory = (ActivatorTranscriber) props.singletonObjectProperty(ActivatorTranscriber.class);
 		
+		try {
+			activator = loadActivator(chromosomeId);
+		} catch(TranscriberException e) {
+			//TODO: Handle error
+			e.printStackTrace();
+		}
 	}
 }
