@@ -1,7 +1,5 @@
 package robots;
 
-import java.io.IOException;
-
 import org.jgap.Chromosome;
 
 import robocode.AdvancedRobot;
@@ -28,12 +26,12 @@ public class RobotController extends AdvancedRobot implements Configurable {
 		super();
 		this.actor = actor;
 		this.sensor = sensor;
-//		try {
-//			activator = loadActivator(chromosomeId);
-//		} catch(TranscriberException e) {
-//			//TODO: Handle error
-//			e.printStackTrace();
-//		}
+		try {
+			activator = loadActivator(chromosomeId);
+		} catch(TranscriberException e) {
+			//TODO: Handle error
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
