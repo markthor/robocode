@@ -26,18 +26,15 @@ public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 		double firePower 		= activatorOutput[9];
 		double scan 			= activatorOutput[10];
 		
-		
 		setMovement(moveForwards, moveBackwards);
 		setGunRotation(turnGunRight, turnGunLeft);
 		setRobotRotation(turnRobotRight, turnRobotLeft);
 		setRadarRotation(turnRadarRight, turnRadarLeft);
 		setFire(fire, firePower);
 		setScan(scan);
-		
-		execute();
 	}
 	
-	private void setMovement(double forward, double backward) {
+	protected void setMovement(double forward, double backward) {
 		double forwardScaled = scale(forward, maxMovementPerTurn);
 		double backwardScaled = scale(backward, maxMovementPerTurn);
 		
@@ -48,9 +45,9 @@ public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 		}
 	}
 	
-	private void setRobotRotation(double right, double left) {
+	protected void setRobotRotation(double right, double left) {
 		double rightScaled = scale(right, maxRobotTurnDegreesPerTurn);
-		double leftScaled = scale(right, maxRobotTurnDegreesPerTurn);
+		double leftScaled = scale(left, maxRobotTurnDegreesPerTurn);
 		
 		if(rightScaled >= leftScaled) {
 			setTurnRight(rightScaled-leftScaled);
@@ -59,9 +56,9 @@ public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 		}
 	}
 	
-	private void setGunRotation(double right, double left) {
+	protected void setGunRotation(double right, double left) {
 		double rightScaled = scale(right, maxGunTurnDegreesPerTurn);
-		double leftScaled = scale(right, maxGunTurnDegreesPerTurn);
+		double leftScaled = scale(left, maxGunTurnDegreesPerTurn);
 		
 		if(rightScaled >= leftScaled) {
 			setTurnGunRight(rightScaled-leftScaled);
@@ -70,9 +67,9 @@ public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 		}
 	}
 	
-	private void setRadarRotation(double right, double left) {
+	protected void setRadarRotation(double right, double left) {
 		double rightScaled = scale(right, maxRadarTurnDegreesPerTurn);
-		double leftScaled = scale(right, maxRadarTurnDegreesPerTurn);
+		double leftScaled = scale(left, maxRadarTurnDegreesPerTurn);
 		
 		if(rightScaled >= leftScaled) {
 			setTurnRadarRight(rightScaled-leftScaled);
@@ -81,13 +78,13 @@ public class RobotActorInteractive extends AdvancedRobot implements RobotActor {
 		}
 	}
 	
-	private void setScan(double scan) {
+	protected void setScan(double scan) {
 		if(scan > 0.5) {
 			scan();
 		}
 	}
 	
-	private void setFire(double fire, double power) {
+	protected void setFire(double fire, double power) {
 		if(fire > 0.5) {
 			setFireBullet(scaleFirePower(power));
 		}

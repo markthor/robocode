@@ -35,9 +35,8 @@ public class RobotController extends AdvancedRobot implements Configurable {
 	}
 	
 	public void run() {
-		while(true) {
-			actor.act(activator.next(sensor.sense()));
-		}
+		actor.act(activator.next(sensor.sense()));
+		execute();
 	}
 	
 	private Activator loadActivator(Long chromosomeId) throws TranscriberException {
