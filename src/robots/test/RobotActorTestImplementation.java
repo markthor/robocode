@@ -13,12 +13,48 @@ public class RobotActorTestImplementation extends RobotActorInteractive {
 	private double turnRadarLeft;
 	private double turnRadarRight;
 	private double fireBullet;
+	private double energy;
 	
+	@Override
+	protected void setMovement(double forward, double backward) {
+		super.setMovement(forward, backward);
+	}
+	
+	@Override 
+	protected void setRobotRotation(double right, double left) {
+		super.setRobotRotation(right, left);
+	}
+	
+	@Override
+	protected void setGunRotation(double right, double left) {
+		super.setGunRotation(right, left);
+	}
+	
+	@Override
+	protected void setRadarRotation(double right, double left) {
+		super.setRadarRotation(right, left);
+	}
+	
+	@Override 
+	protected void setScan(double scan) {
+		super.setScan(scan);
+	}
+	
+	@Override
+	protected void setFire(double fire, double power) {
+		super.setFire(fire, power);
+	}
+	
+	@Override
+	public double getEnergy() {
+		return energy;
+	}
+
 	@Override
 	public void scan() {
 		
 	}
-
+	
 	public double getTurnRight() {
 		return turnRight;
 	}

@@ -1,8 +1,10 @@
 package robots;
 
+import static robots.RobotRulesConstants.maxEnergy;
+import static robots.RobotRulesConstants.maxGunHeat;
+import static robots.RobotRulesConstants.maxMovementPerTurn;
 import robocode.AdvancedRobot;
 import robocode.ScannedRobotEvent;
-import static robots.RobotRulesConstants.*;
 
 public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSensor {
 
