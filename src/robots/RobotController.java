@@ -36,17 +36,13 @@ public class RobotController extends AdvancedRobot implements Configurable {
 		Chromosome chromosome = db.loadChromosome(chromosomeId.toString(), new DummyConfiguration());
 		return activatorFactory.newActivator(chromosome);
 	}
-	
-	public static void main(String[] args) throws Exception {
-		Properties props = new Properties( "robocode-controller.properties" );
-		RobotController robot = new RobotController(null, null, 7L);
-		robot.init(props);
-	}
 
 	@Override
 	public void init(Properties props) throws Exception {
 		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		activatorFactory = (ActivatorTranscriber) props.singletonObjectProperty(ActivatorTranscriber.class);
+		actor = new RobotActorInteractive();
+		sensor = new RobotSensorRelevantInputs();
 		
 		try {
 			activator = loadActivator(chromosomeId);
