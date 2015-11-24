@@ -1,5 +1,7 @@
 package robots.test;
 
+import java.util.Random;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,18 +28,26 @@ public class testRobotController {
 
 	@Test
 	public void testSimpleOutput() {
+		Random r = new Random();
 		RobotActorTestImplementation robotActor = new RobotActorTestImplementation();
 		double[] input = new double[11];
-		for (double d : input) {
-			d = 0.5;
+		for(int i = 0; i < input.length; i++) {
+			input[i] = r.nextDouble();
 		}
+		// Set fire to true such that the firepower can be asserted.
+		input[8] = 1.0;
+		
 		robotActor.act(input);
 		
 		Assert.assertTrue(isWithinRange(robotActor.getAhead(), 0, RobotRulesConstants.maxMovementPerTurn));
 		Assert.assertTrue(isWithinRange(robotActor.getBack(), 0, RobotRulesConstants.maxMovementPerTurn));
 		Assert.assertTrue(isWithinRange(robotActor.getTurnGunLeft(), 0, RobotRulesConstants.maxGunTurnDegreesPerTurn));
 		Assert.assertTrue(isWithinRange(robotActor.getTurnGunRight(), 0, RobotRulesConstants.maxGunTurnDegreesPerTurn));
-		Assert.assertTrue(isWithinRange(robotActor.getTurnGunRight(), 0, RobotRulesConstants.maxGunTurnDegreesPerTurn));
+		Assert.assertTrue(isWithinRange(robotActor.getTurnRadarRight(), 0, RobotRulesConstants.maxRadarTurnDegreesPerTurn));
+		Assert.assertTrue(isWithinRange(robotActor.getTurnRadarLeft(), 0, RobotRulesConstants.maxRadarTurnDegreesPerTurn));
+		Assert.assertTrue(isWithinRange(robotActor.getFireBullet(), RobotRulesConstants.minFirePower, RobotRulesConstants.maxFirePower));
+		Assert.assertTrue(isWithinRange(robotActor.getTurnRight(), 0, RobotRulesConstants.maxRobotTurnDegreesPerTurn));
+		Assert.assertTrue(isWithinRange(robotActor.getTurnLeft(), 0, RobotRulesConstants.maxRobotTurnDegreesPerTurn));
 		
 	}
 
