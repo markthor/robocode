@@ -8,11 +8,6 @@ import java.util.Set;
 import org.jgap.BulkFitnessFunction;
 import org.jgap.Chromosome;
 
-import robocode.Robot;
-
-import com.anji.integration.Activator;
-import com.anji.integration.ActivatorTranscriber;
-import com.anji.integration.TranscriberException;
 import com.anji.persistence.Persistence;
 import com.anji.util.Configurable;
 import com.anji.util.Properties;
@@ -24,7 +19,6 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 	private static Set<String> enemies;
 	private static final long serialVersionUID = 4789291203830613376L;
 	private RobocodeController robocodeController;
-	private ActivatorTranscriber activatorFactory;
 	private Persistence db = null;
 
 	@Override
@@ -32,38 +26,32 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 	public void evaluate(List subjects) {
 		List<Chromosome> chromosomes = (List<Chromosome>) subjects;
 		for(Chromosome chromosome : chromosomes) {
-			try {
-				List<BattleListener> bls = new ArrayList<BattleListener>();
-				
-				persist(chromosome);
-				
-				Activator network = activatorFactory.newActivator(chromosome);
-				//List<Robot> enemies = new ArrayList<Robot>();
-				robocodeController = new BattleController();
-				for(String enemy : getEnemies()) {
-					bls.add(robocodeController.runGame("robots.SimpleRobotController", enemy));
-					//bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
-					//totalScore += robocodeController.runGame(network, enemy);
-				}
-				
-				//Calc score
-				int fitness = 0;
-				for (BattleListener bl : bls) {
-					while (!bl.isFinished()) {
-						try {
-							wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					fitness += bl.getFitness();
-				}
-				
-				chromosome.setFitnessValue(fitness);
-			} catch(TranscriberException e) {
-				e.printStackTrace();
+			List<BattleListener> bls = new ArrayList<BattleListener>();
+			
+			persist(chromosome);
+			
+			robocodeController = new BattleController();
+			for(String enemy : getEnemies()) {
+				bls.add(robocodeController.runGame("robots.RobotController", enemy));
+				//bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
+				//totalScore += robocodeController.runGame(network, enemy);
 			}
+			
+			//Calc score
+			int fitness = 0;
+			for (BattleListener bl : bls) {
+				while (!bl.isFinished()) {
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				fitness += bl.getFitness();
+			}
+			
+			chromosome.setFitnessValue(fitness);
 			//Activate activator/s
 		}
 	}
@@ -84,7 +72,6 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 
 	@Override
 	public void init(Properties props) throws Exception {
-		activatorFactory = (ActivatorTranscriber) props.singletonObjectProperty(ActivatorTranscriber.class);
 		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 	}
 	
