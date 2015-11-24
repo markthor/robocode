@@ -8,8 +8,6 @@ import java.util.Set;
 import org.jgap.BulkFitnessFunction;
 import org.jgap.Chromosome;
 
-import robocode.Robot;
-
 import com.anji.integration.Activator;
 import com.anji.integration.ActivatorTranscriber;
 import com.anji.integration.TranscriberException;
