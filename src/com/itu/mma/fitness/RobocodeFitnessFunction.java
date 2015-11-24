@@ -51,10 +51,10 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				for (BattleListener bl : bls) {
 					while (!bl.isFinished()) {
 						try {
-							wait();
-						} catch (InterruptedException e) {
+							Thread.sleep(1000);
+						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							e1.printStackTrace();
 						}
 					}
 					fitness += bl.getFitness();
@@ -94,10 +94,10 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 		}
 		try {
 			Properties p = new Properties("ranks.properties");
-			return p.stringPropertyNames();
+			enemies = p.stringPropertyNames();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return enemies;
 	}
 }

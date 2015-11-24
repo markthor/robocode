@@ -24,7 +24,6 @@ public class BattleListener implements IBattleListener {
 		//Save results
 		finished  = true;
 		fitness = arg0.getIndexedResults()[0].getScore();
-		notifyAll();
 	}
 
 	@Override
