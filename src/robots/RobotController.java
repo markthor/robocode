@@ -37,12 +37,6 @@ public class RobotController extends AdvancedRobot implements Configurable {
 		return activatorFactory.newActivator(chromosome);
 	}
 	
-	public static void main(String[] args) throws Exception {
-		Properties props = new Properties( "robocode-controller.properties" );
-		RobotController robot = new RobotController(null, null, 7L);
-		robot.init(props);
-	}
-
 	@Override
 	public void init(Properties props) throws Exception {
 		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
