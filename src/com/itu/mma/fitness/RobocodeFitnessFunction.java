@@ -1,6 +1,5 @@
 package com.itu.mma.fitness;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,6 @@ import org.jgap.BulkFitnessFunction;
 import org.jgap.Chromosome;
 
 import robocode.Robot;
-import robocode.control.events.IBattleListener;
 
 import com.anji.integration.Activator;
 import com.anji.integration.ActivatorTranscriber;
@@ -42,7 +40,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				List<Robot> enemies = new ArrayList<Robot>();
 				int totalScore = 0;
 				for(Robot enemy : enemies) {
-					bls.add(robocodeController.runGame(network, enemy));
+					//bls.add(robocodeController.runGame(network, enemy));
 					//totalScore += robocodeController.runGame(network, enemy);
 				}
 				
@@ -50,7 +48,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 				int fitness = 0;
 				for (BattleListener bl : bls) {
 					while (!bl.isFinished()) {
-						wait();
+						//wait();
 					}
 					fitness += bl.getFitness();
 				}
@@ -77,9 +75,9 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 	}
 
 	@Override
-	public void init(Properties properties) throws Exception {
-		activatorFactory = (ActivatorTranscriber) properties.singletonObjectProperty(ActivatorTranscriber.class);
-		db = (Persistence) properties.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
+	public void init(Properties props) throws Exception {
+		activatorFactory = (ActivatorTranscriber) props.singletonObjectProperty(ActivatorTranscriber.class);
+		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 	}
 	
 	public Set<String> findEnemies(){
