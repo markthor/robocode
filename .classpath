@@ -12,7 +12,7 @@
 			<attribute name="javadoc_location" value="file:/C:/robocode/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/robocode.repository-1.9.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/robocode.repository-1.9.2.4.jar" sourcepath="lib/robocode-1.9.2.4/robocode.repository/src"/>
 	<classpathentry kind="lib" path="lib/robocode.sound-1.9.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/robocode.ui-1.9.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/robocode.ui.editor-1.9.2.4.jar"/>
