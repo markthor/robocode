@@ -6,14 +6,16 @@ import static robots.RobotRulesConstants.*;
 
 public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSensor {
 
-	private static final int numberOfInputs = 10;
+	private static final int numberOfBasicInputs = 12;
+	private static final int numberOfRangeFinders = 4;
 	private static final double rangeCeiling = 1.0;
 	private static final double rangeFloor = -1.0;
 	private boolean didLastBulletHit = false;
 	
 	@Override
 	public double[] sense() {
-		double[] result = new double[numberOfInputs];
+		int totalNumberOfInputs = numberOfBasicInputs+numberOfRangeFinders;
+		double[] result = new double[totalNumberOfInputs];
 		
 		result[0] = hasRecentlyScannedEnemy();
 		result[1] = getEnemyVelocity();
@@ -28,6 +30,10 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 		result[10] = getRobotGunHeat();
 		result[11] = getRobotRadarHeading();
 		
+		double[] distances = getDistanceToWalls(numberOfRangeFinders);
+		for(int i = numberOfBasicInputs; i < totalNumberOfInputs; i++) {
+			result[i] = distances[i-numberOfBasicInputs];
+		}
 		
 		validateResult(result);
 		return result;
@@ -39,8 +45,69 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 		}
 	}
 	
-	private double[] getDistanceToWalls() {
-		return null;
+	private double[] getDistanceToWalls(int numberOfRangeFinders) {
+		double[] results = new double[numberOfRangeFinders];
+		double angle = 360.0/numberOfRangeFinders;
+		for(int i = 0; i < results.length; i++) {
+			results[i] = scaleDistance(getDistanceToWall(getHeading()+i*angle));
+		}
+		return results;
+	}
+	
+	private double getDistanceToWall(double offSet) {
+		double absoluteAngle = (getHeading() + offSet) % 360.0;
+		double adjacentOppositeFactor, deltaX, deltaY, deltaXYFactor;
+		
+		// First quarter (clockwise from 12 o'clock)
+		if(absoluteAngle < 90) {
+			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			deltaX = getBattleFieldWidth()-getX();
+			deltaY = getBattleFieldHeight()-getY();
+			deltaXYFactor = deltaX/deltaY;
+			
+			if(adjacentOppositeFactor < deltaXYFactor) {
+				return deltaY/Math.sin(absoluteAngle);
+			} else {
+				return deltaX/Math.cos(absoluteAngle);
+			}
+		// Second quarter
+		} else if(absoluteAngle <= 180 ) {
+			absoluteAngle -= 90;
+			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			deltaX = getBattleFieldWidth()-getX();
+			deltaY = getY();
+			deltaXYFactor = deltaX/deltaY;
+			
+			if(adjacentOppositeFactor < deltaXYFactor) {
+				return deltaY/Math.sin(absoluteAngle);
+			} else {
+				return deltaX/Math.cos(absoluteAngle);
+			}
+		// Third quarter
+		} else if(absoluteAngle <= 270) {
+			absoluteAngle -= 180.0;
+			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			deltaX = getX();
+			deltaY = getY();
+			deltaXYFactor = deltaX/deltaY;
+			if(adjacentOppositeFactor < deltaXYFactor) {
+				return deltaY/Math.sin(absoluteAngle);
+			} else {
+				return deltaX/Math.cos(absoluteAngle);
+			}
+		// Fourth quarter
+		} else {
+			absoluteAngle -= 270.0;
+			adjacentOppositeFactor = Math.cos(absoluteAngle)/Math.sin(absoluteAngle);
+			deltaX = getX();
+			deltaY = getBattleFieldHeight()-getY();
+			deltaXYFactor = deltaX/deltaY;
+			if(adjacentOppositeFactor < deltaXYFactor) {
+				return deltaY/Math.sin(absoluteAngle);
+			} else {
+				return deltaX/Math.cos(absoluteAngle);
+			}
+		}
 	}
 	
 	private double getRobotRadarHeading() {
