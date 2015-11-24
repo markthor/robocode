@@ -6,7 +6,7 @@ import static robots.RobotRulesConstants.*;
 
 public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSensor {
 
-	private static final int numberOfBasicInputs = 12;
+	private static final int numberOfBasicInputs = 13;
 	private static final int numberOfRangeFinders = 4;
 	private static final double rangeCeiling = 1.0;
 	private static final double rangeFloor = -1.0;
@@ -29,6 +29,7 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 		result[9] = getRobotHeading();
 		result[10] = getRobotGunHeat();
 		result[11] = getRobotRadarHeading();
+		result[12] = getRobotGunHeading();
 		
 		double[] distances = getDistanceToWalls(numberOfRangeFinders);
 		for(int i = numberOfBasicInputs; i < totalNumberOfInputs; i++) {
@@ -114,6 +115,10 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 		return scaleDegrees(getRadarHeading());
 	}
 	
+	private double getRobotGunHeading() {
+		return scaleDegrees(getGunHeading());
+	}
+	
 	private double getRobotGunHeat() {
 		return scaleGunHeat(getGunHeat());
 	}
@@ -131,7 +136,7 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 	}
 	
 	private double hasRecentlyScannedEnemy() {
-		return booleanToDouble(getScannedRobotEvents().size() > 0);
+		return booleanToDouble(getScannedRobotEventIfItExists() != null);
 	}
 	
 	private double getEnemyVelocity() {
@@ -180,6 +185,7 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 	}
 	
 	private ScannedRobotEvent getScannedRobotEventIfItExists() {
+		if(getScannedRobotEvents() == null) return null;
 		if(getScannedRobotEvents().size() > 1) {
 			throw new IllegalStateException("Are you running a game with more than 2 robots? If not, this should not happen, revise code.");
 		}
@@ -216,7 +222,7 @@ public class RobotSensorRelevantInputs extends AdvancedRobot implements RobotSen
 	private double scale(double value, double max, double min) {
 		if(!isWithinRange(value, min, max)) throw new IllegalStateException("Min max values does not match input. Should not happen, revise code.");
 		double scaledBetweenOneAndZero = (value/(max - min));
-		return ((rangeCeiling - rangeFloor) * scaledBetweenOneAndZero) - rangeFloor;
+		return ((rangeCeiling - rangeFloor) * scaledBetweenOneAndZero) + rangeFloor;
 	}
 	
 	private double getMaxDistance() {
