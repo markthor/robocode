@@ -44,15 +44,38 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+
 					}
 				}
 				fitness += bl.getFitness();
 			}
+
+			nextProperty();
+
 			
 			chromosome.setFitnessValue(fitness);
+
 		}
 	}
 	
+	private void nextProperty() {
+		try {
+			Properties pBot = new Properties("testbot.properties");
+			Integer next = (int)pBot.get("next") + 1;
+			
+			Properties pController = new Properties("robocode-controller.properties");
+			if ((int)pController.get("popul.size") <= next) {
+				pBot.setProperty("next", "0");
+			} else {
+				pBot.setProperty("next", next.toString());
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	private void persist(Chromosome chromosome) {
 		try {
 			db.store(chromosome);
