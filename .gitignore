@@ -15,3 +15,5 @@ db/
 nevt/
 
 robots/.data
+robots/robot.database
+robots/__rzi*
