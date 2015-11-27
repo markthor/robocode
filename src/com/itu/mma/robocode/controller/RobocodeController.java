@@ -1,6 +1,5 @@
 package com.itu.mma.robocode.controller;
 
-import robocode.control.events.IBattleListener;
 
 public interface RobocodeController {
 	
