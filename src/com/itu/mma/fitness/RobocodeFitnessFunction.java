@@ -32,7 +32,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 			
 			robocodeController = new BattleController();
 			for(String enemy : getEnemies()) {
-				bls.add(robocodeController.runGame("robots.RobotController", enemy));
+				bls.add(robocodeController.runGame("robots.SimpleRobotController", enemy));
 				//bls.add(robocodeController.runGame(chromosome.getId().toString(), enemy));
 				//totalScore += robocodeController.runGame(network, enemy);
 			}
@@ -53,23 +53,21 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 			}
 
 			nextProperty();
-
 			
 			chromosome.setFitnessValue(fitness);
-
 		}
 	}
 	
 	private void nextProperty() {
 		try {
 			Properties pBot = new Properties("testbot.properties");
-			Integer next = (int)pBot.get("next") + 1;
+			int next = Integer.parseInt((String)pBot.get("next")) + 1;
 			
 			Properties pController = new Properties("robocode-controller.properties");
-			if ((int)pController.get("popul.size") <= next) {
+			if (Integer.parseInt((String)pController.get("popul.size")) <= next) {
 				pBot.setProperty("next", "0");
 			} else {
-				pBot.setProperty("next", next.toString());
+				pBot.setProperty("next", next+"");
 			}
 			
 		} catch (IOException e) {

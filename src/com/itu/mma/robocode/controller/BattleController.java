@@ -15,7 +15,7 @@ public class BattleController implements RobocodeController {
 		RobocodeEngine engine = getEngine();
 		
 		engine.addBattleListener(bl);
-		//RobotSpecification[] allBots = engine.getLocalRepository();
+		RobotSpecification[] allBots = engine.getLocalRepository();
 		//String s = testBot + ", " + enemy;
 		RobotSpecification[] bots = engine.getLocalRepository(testBot + ", " + enemy);
 		
