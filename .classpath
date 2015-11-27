@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/codesize-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/picocontainer-2.14.2.jar"/>
-	<classpathentry kind="lib" path="lib/robocode.battle-1.9.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/robocode.battle-1.9.2.4.jar" sourcepath="lib/robocode-1.9.2.4/robocode.battle/src"/>
 	<classpathentry kind="lib" path="lib/robocode.core-1.9.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/robocode.host-1.9.2.4.jar" sourcepath="lib/robocode-1.9.2.4/robocode.host/src"/>
 	<classpathentry kind="lib" path="lib/robocode.jar" sourcepath="lib/robocode-1.9.2.4/robocode.api/src">
