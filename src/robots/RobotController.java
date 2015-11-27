@@ -20,6 +20,10 @@ public class RobotController extends AdvancedRobot implements Configurable {
 	private Activator activator;
 	private Long chromosomeId = 1L;
 	
+	public RobotController() {
+		
+	}
+	
 	public RobotController(RobotActor actor, RobotSensor sensor, Long chromosomeId) {
 		super();
 		scream();
