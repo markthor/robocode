@@ -32,7 +32,7 @@ public class RobocodeFitnessFunction implements BulkFitnessFunction, Configurabl
 			
 			robocodeController = new BattleController();
 			for(String enemy : getEnemies()) {
-				bls.add(robocodeController.runGame("robots.RobotController", enemy));
+				bls.add(robocodeController.runGame("robots.RobotControllerFlat", enemy));
 			}
 			
 			//Calc fitness
