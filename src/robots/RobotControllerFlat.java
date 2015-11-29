@@ -1,14 +1,5 @@
 package robots;
 
-import static robots.RobotRulesConstants.maxEnergy;
-import static robots.RobotRulesConstants.maxFirePower;
-import static robots.RobotRulesConstants.maxGunHeat;
-import static robots.RobotRulesConstants.maxGunTurnDegreesPerTurn;
-import static robots.RobotRulesConstants.maxMovementPerTurn;
-import static robots.RobotRulesConstants.maxRadarTurnDegreesPerTurn;
-import static robots.RobotRulesConstants.maxRobotTurnDegreesPerTurn;
-import static robots.RobotRulesConstants.minFirePower;
-
 import org.jgap.Chromosome;
 
 import robocode.AdvancedRobot;
@@ -25,10 +16,16 @@ import com.anji.util.Properties;
 public class RobotControllerFlat extends AdvancedRobot implements Configurable {
 	private static ActivatorTranscriber activatorFactory;
 	private static Persistence db;
-	private RobotActor actor = new RobotActorInteractive();
-	private RobotSensor sensor = new RobotSensorRelevantInputs();
 	private Activator activator;
 	private Long chromosomeId = 1L;
+	public static double maxMovementPerTurn = 8;
+	public static double maxRobotTurnDegreesPerTurn = 10;
+	public static double maxGunTurnDegreesPerTurn = 20;
+	public static double maxRadarTurnDegreesPerTurn = 45;
+	public static double maxFirePower = 3.0;
+	public static double minFirePower = 0.1;
+	public static double maxEnergy = 100;
+	public static double maxGunHeat = 3.0;
 	
 	public void run() {
 		act(activator.next(sense()));
