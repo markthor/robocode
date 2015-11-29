@@ -1,5 +1,9 @@
 package robots;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import org.jgap.Chromosome;
 
 import robocode.AdvancedRobot;
@@ -28,17 +32,20 @@ public class RobotControllerFlat extends AdvancedRobot implements Configurable {
 	public static double maxGunHeat = 3.0;
 	
 	public void run() {
+		writeToFile();
 		act(activator.next(sense()));
 		execute();
 	}
 	
 	private Activator loadActivator(Long chromosomeId) throws TranscriberException {
+		writeToFile();
 		Chromosome chromosome = db.loadChromosome(chromosomeId.toString(), new DummyConfiguration());
 		return activatorFactory.newActivator(chromosome);
 	}
 
 	@Override
 	public void init(Properties props) throws Exception {
+		writeToFile();
 		db = (Persistence) props.singletonObjectProperty( Persistence.PERSISTENCE_CLASS_KEY );
 		activatorFactory = (ActivatorTranscriber) props.singletonObjectProperty(ActivatorTranscriber.class);
 		
@@ -46,6 +53,19 @@ public class RobotControllerFlat extends AdvancedRobot implements Configurable {
 			activator = loadActivator(chromosomeId);
 		} catch(TranscriberException e) {
 			//TODO: Handle error
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeToFile() {
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter("C:\the-file-name.txt", "UTF-8");
+			writer.println("The first line");
+			writer.println("The second line");
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
