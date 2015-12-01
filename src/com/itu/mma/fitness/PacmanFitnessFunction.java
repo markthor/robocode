@@ -1,5 +1,6 @@
 package com.itu.mma.fitness;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.jgap.BulkFitnessFunction;
@@ -8,6 +9,8 @@ import org.jgap.Chromosome;
 import com.anji.integration.Activator;
 import com.anji.integration.ActivatorTranscriber;
 import com.anji.integration.TranscriberException;
+import com.anji.persistence.Persistence;
+import com.anji.util.Properties;
 
 import pacman.Executor;
 import pacman.controller.PacmanController;
@@ -19,7 +22,18 @@ import pacman.game.Constants.MOVE;
 public class PacmanFitnessFunction implements BulkFitnessFunction {
 
 	private static final long serialVersionUID = -1747301290297046236L;
-	private static final ActivatorTranscriber activatorFactory = new ActivatorTranscriber();
+	private ActivatorTranscriber activatorFactory;
+	
+	public PacmanFitnessFunction() {
+			Properties props;
+			try {
+				props = new Properties("robocode-controller.properties");
+				activatorFactory =  (ActivatorTranscriber) props.singletonObjectProperty( ActivatorTranscriber.class );
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(2);
+			}
+	}
 	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
