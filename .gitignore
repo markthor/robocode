@@ -12,7 +12,6 @@ bin/
 .DS_Store
 
 db/
-nevt/
 
 robots/.data
 robots/robot.database
