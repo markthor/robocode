@@ -10,6 +10,7 @@ import com.anji.integration.ActivatorTranscriber;
 import com.anji.integration.TranscriberException;
 
 import pacman.Executor;
+import pacman.controller.PacmanController;
 import pacman.controllers.Controller;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
@@ -27,14 +28,20 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 		for (Chromosome chromosome : chromosomes) {
 //			try {
 
-				Controller<MOVE> pacManController = null;
+				PacmanController pacManController = null;
+				try {
+					pacManController = new PacmanController(activatorFactory.newActivator(chromosome));
+				} catch (TranscriberException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 //				Controller<MOVE> pacManController = new OurPacManController(activatorFactory.newActivator(chromosome));
 
 				Executor exec = new Executor();
 				exec.runGame(pacManController, new StarterGhosts(), false, 0);
 
 				// TODO: Uncomment when implemented
-				// chromosome.setFitnessValue(pacManController.getScore());
+				chromosome.setFitnessValue(pacManController.getScore());
 //			} catch (TranscriberException e) {
 //				e.printStackTrace();
 //			}
@@ -43,6 +50,6 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 
 	@Override
 	public int getMaxFitnessValue() {
-		return 1_000;
+		return 1_000_000;
 	}
 }
