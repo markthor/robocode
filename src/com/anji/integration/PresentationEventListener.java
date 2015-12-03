@@ -140,14 +140,19 @@ public void storeRun( boolean isRunCompleted ) {
 		fitnessOut = new FileWriter( fitnessDir.getAbsolutePath() + File.separator + FITNESS_FILE );
 		speciesOut = new FileWriter( speciesDir.getAbsolutePath() + File.separator + SPECIES_FILE );
 		complexityOut = new FileWriter( complexityDir.getAbsolutePath() + File.separator + COMPLEXITY_FILE );
-		dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE );
+		if(isFirstGeneration()) {
+			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE, false );
+			dataOut.write( buildDataFileHeaders() );
+		} else {
+			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE, true );
+			dataOut.write( buildDataFileContent() );
+		}
 		
 
 		XmlPersistableRun xmlRun = new XmlPersistableRun( run );
 		complexityOut.write( xmlRun.toComplexityString( isRunCompleted ) );
 		fitnessOut.write( xmlRun.toFitnessString( isRunCompleted ) );
 		speciesOut.write( xmlRun.toSpeciesString( isRunCompleted ) );
-		dataOut.write( buildDataFileContent() );
 	}
 	catch ( Throwable e ) {
 		logger.error( "PresentationEventListener: error storing run", e );
@@ -173,18 +178,9 @@ public void storeRun( boolean isRunCompleted ) {
 @SuppressWarnings("unchecked")
 public String buildDataFileContent() {
 	StringBuilder dataBuilder = new StringBuilder();
-	dataBuilder.append("generation\t");
-	dataBuilder.append("max-score\t");
-	dataBuilder.append("connected-input-neurons\t");
-	dataBuilder.append("connections\t");
-	dataBuilder.append("connected-neurons\t");
-	dataBuilder.append("network-size");
 	
-	
-	List<Generation> generations = (List<Generation>) run.getGenerations();
-	int generation = generations.size();
-	if(0 < generation) {
-		Generation curGen = generations.get(generation-1);
+	Generation curGen = getCurrentGeneration();
+	if(curGen != null) {
 		Chromosome fittestChromosome = curGen.getGenoType().getFittestChromosome();
 		
 		if(fittestChromosome != null) {
@@ -221,15 +217,47 @@ public String buildDataFileContent() {
 			int maxScore = fittestChromosome.getFitnessValue();
 			int networkSize = connectedNeurons.size() + connections;
 			
-			dataBuilder.append(generation + "\t");
+			dataBuilder.append(getCurrentGenerationNumber() + "\t");
 			dataBuilder.append(maxScore + "\t");
 			dataBuilder.append(connectedInputNeurons + "\t");
 			dataBuilder.append(connections + "\t");
 			dataBuilder.append(connectedNeurons.size() + "\t");
-			dataBuilder.append(networkSize);
+			dataBuilder.append(networkSize + "\n");
 		}
 	}
 	return dataBuilder.toString();
+}
+
+private String buildDataFileHeaders() {
+	StringBuilder dataBuilder = new StringBuilder();
+	dataBuilder.append("generation\t");
+	dataBuilder.append("max-score\t");
+	dataBuilder.append("connected-input-neurons\t");
+	dataBuilder.append("connections\t");
+	dataBuilder.append("connected-neurons\t");
+	dataBuilder.append("network-size\n");
+	return dataBuilder.toString();
+}
+
+private boolean isFirstGeneration() {
+	return getCurrentGenerations().size() == 1;
+}
+
+private Generation getCurrentGeneration() {
+	List<Generation> generations = getCurrentGenerations();
+	int generation = generations.size();
+	if(0 < generation) {
+		return generations.get(generation-1);
+	}
+	return null;
+}
+
+private List<Generation> getCurrentGenerations() {
+	return (List<Generation>) run.getGenerations();
+}
+
+private int getCurrentGenerationNumber() {
+	return getCurrentGenerations().size();
 }
 
 }
