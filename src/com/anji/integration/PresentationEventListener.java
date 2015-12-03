@@ -113,7 +113,7 @@ public void init( Properties props ) {
 	speciesDir = mkdir( basePath + File.separator + SPECIES_DIR );
 	complexityDir = mkdir( basePath + File.separator + COMPLEXITY_DIR );
 	dataDir = mkdir( basePath + File.separator + DATA_DIR );
-	dataFileName = props.getProperty( DATA_FILE_NAME_KEY );
+	dataFileName = props.getProperty( DATA_FILE_NAME_KEY ) + ".dat";
 }
 
 /**
