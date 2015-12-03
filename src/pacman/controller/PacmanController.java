@@ -106,7 +106,7 @@ public class PacmanController extends NeuralPacmanController {
 		int totalInputs = otherInputs + highestPillCount;
 		//int totalInputs = otherInputs + highestPillCount;
 		
-		double[] result = new double[totalInputs];
+		double[] result = new double[totalInputs * 2];
 		//All ghosts
 		//All ghost edible
 		//Nearest ghost, next, next, next
@@ -177,7 +177,7 @@ public class PacmanController extends NeuralPacmanController {
 		result[40] = scalePercentage(getPercentagePillsEaten(game));
 		result[41] = 1d; //Bias node
 		
-		int k = otherInputs - 1;
+		int k = otherInputs;
 		
 		tempArray = getDistanceToAllPills(game, node);
 		
@@ -187,10 +187,10 @@ public class PacmanController extends NeuralPacmanController {
 		
 		if (tempArray.length != highestPillCount) {
 			for (int i = tempArray.length + otherInputs; i < otherInputs + highestPillCount; i++) {
-				result[i] = getMaxDistance();
+				result[i] = scaleDistance(getMaxDistance());
 			}
 		}
-		/*
+		
 		k = totalInputs;
 		if (irrelevant) {
 			Random r = new Random();
@@ -198,7 +198,7 @@ public class PacmanController extends NeuralPacmanController {
 				result[k+i] = r.nextDouble();
 			}
 		}
-		*/
+		
 		
 		return result;
 	}
@@ -207,7 +207,7 @@ public class PacmanController extends NeuralPacmanController {
 		int[] allPills = game.getPillIndices();
 		double[] result = new double[allPills.length];
 		for (int i = 0 ; i < allPills.length ; i++) {
-			if (game.isPillStillAvailable(allPills[i])) {
+			if (game.isPillStillAvailable(i)) {
 				result[i] = game.getShortestPathDistance(currentNode, allPills[i]);
 			} else {
 				result[i] = getMaxDistance();
