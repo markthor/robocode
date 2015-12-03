@@ -34,7 +34,7 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void evaluate(List subjects) {
 		List<Chromosome> chromosomes = (List<Chromosome>) subjects;
-		int runs = 10;
+		int runs = 30;
 		
 		for (Chromosome chromosome : chromosomes) {
 			PacmanController pacManController = null;

@@ -2,6 +2,8 @@ package pacman.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
+
 import com.anji.integration.Activator;
 
 import pacman.game.Constants.DM;
@@ -99,11 +101,12 @@ public class PacmanController extends NeuralPacmanController {
 	protected double[] getInputFromGameStateAndNode(int node, Game game, MOVE m) {
 		int highestPillCount = 240;
 		int otherInputs = 42;
+		boolean irrelevant = true;
 		
 		int totalInputs = otherInputs;
 		//int totalInputs = otherInputs + highestPillCount;
 		
-		double[] result = new double[totalInputs];
+		double[] result = new double[totalInputs * 2];
 		//All ghosts
 		//All ghost edible
 		//Nearest ghost, next, next, next
@@ -174,9 +177,10 @@ public class PacmanController extends NeuralPacmanController {
 		result[40] = scalePercentage(getPercentagePillsEaten(game));
 		result[41] = 1d; //Bias node
 		
+		int k = otherInputs - 1;
 		/*
 		tempArray = getDistanceToAllPills(game, node);
-		int k = otherInputs - 1;
+		
 		for (int i = 0; i < tempArray.length; i++) {
 			result[k+i] = scaleDistance(tempArray[i]);
 		}
@@ -187,6 +191,14 @@ public class PacmanController extends NeuralPacmanController {
 			}
 		}
 		*/
+		k = 0;
+		if (irrelevant) {
+			Random r = new Random();
+			for (int i = 0; i < totalInputs; i++) {
+				result[k+i] = r.nextDouble();
+			}
+		}
+		
 		return result;
 	}
 
