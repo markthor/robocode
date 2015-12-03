@@ -47,7 +47,7 @@ public class PresentationEventListener implements GeneticEventListener {
 
 /**
  * poperties key, directory in which to store presentation data
- */
+ */	
 public final static String BASE_DIR_KEY = "presentation.dir";
 
 private final static String FITNESS_DIR = "fitness/";
@@ -64,7 +64,9 @@ private final static String COMPLEXITY_FILE = "complexity.xml";
 
 private final static String DATA_DIR = "data/";
 
-private final static String DATA_FILE = "run.dat";
+private final static String DATA_FILE_NAME_KEY = "run.name";
+
+private String dataFileName;
 
 private static Logger logger = Logger.getLogger( PresentationEventListener.class );
 
@@ -111,6 +113,7 @@ public void init( Properties props ) {
 	speciesDir = mkdir( basePath + File.separator + SPECIES_DIR );
 	complexityDir = mkdir( basePath + File.separator + COMPLEXITY_DIR );
 	dataDir = mkdir( basePath + File.separator + DATA_DIR );
+	dataFileName = props.getProperty( DATA_FILE_NAME_KEY );
 }
 
 /**
@@ -141,10 +144,10 @@ public void storeRun( boolean isRunCompleted ) {
 		speciesOut = new FileWriter( speciesDir.getAbsolutePath() + File.separator + SPECIES_FILE );
 		complexityOut = new FileWriter( complexityDir.getAbsolutePath() + File.separator + COMPLEXITY_FILE );
 		if(isFirstGeneration()) {
-			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE, false );
+			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + dataFileName, false );
 			dataOut.write( buildDataFileHeaders() );
 		} else {
-			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE, true );
+			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + dataFileName, true );
 		}
 		dataOut.write( buildDataFileContent() );
 		
@@ -254,6 +257,7 @@ private Generation getCurrentGeneration() {
 	return null;
 }
 
+@SuppressWarnings("unchecked")
 private List<Generation> getCurrentGenerations() {
 	return (List<Generation>) run.getGenerations();
 }
