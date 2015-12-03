@@ -96,7 +96,7 @@ private void setGene( Gene aGene ) {
  * for hibernate
  * @return persistence id
  */
-private Long getId() {
+public Long getId() {
 	return id;
 }
 

@@ -176,4 +176,8 @@ private Long getId() {
 private void setId( Long aId ) {
 	id = aId;
 }
+
+public Genotype getGenoType() {
+	return genotype;
+}
 }

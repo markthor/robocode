@@ -21,11 +21,20 @@ package com.anji.integration;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
+import org.jgap.Allele;
+import org.jgap.Chromosome;
 import org.jgap.event.GeneticEvent;
 import org.jgap.event.GeneticEventListener;
 
+import com.anji.neat.ConnectionAllele;
+import com.anji.neat.NeuronAllele;
+import com.anji.neat.NeuronType;
 import com.anji.run.Run;
 import com.anji.util.Properties;
 
@@ -53,6 +62,10 @@ private final static String COMPLEXITY_DIR = "complexity/";
 
 private final static String COMPLEXITY_FILE = "complexity.xml";
 
+private final static String DATA_DIR = "data/";
+
+private final static String DATA_FILE = "run.dat";
+
 private static Logger logger = Logger.getLogger( PresentationEventListener.class );
 
 private File fitnessDir;
@@ -60,6 +73,8 @@ private File fitnessDir;
 private File speciesDir;
 
 private File complexityDir;
+
+private File dataDir;
 
 private Run run;
 
@@ -95,6 +110,7 @@ public void init( Properties props ) {
 	fitnessDir = mkdir( basePath + File.separator + FITNESS_DIR );
 	speciesDir = mkdir( basePath + File.separator + SPECIES_DIR );
 	complexityDir = mkdir( basePath + File.separator + COMPLEXITY_DIR );
+	dataDir = mkdir( basePath + File.separator + DATA_DIR );
 }
 
 /**
@@ -119,16 +135,19 @@ public void storeRun( boolean isRunCompleted ) {
 	FileWriter fitnessOut = null;
 	FileWriter speciesOut = null;
 	FileWriter complexityOut = null;
+	FileWriter dataOut = null;
 	try {
 		fitnessOut = new FileWriter( fitnessDir.getAbsolutePath() + File.separator + FITNESS_FILE );
 		speciesOut = new FileWriter( speciesDir.getAbsolutePath() + File.separator + SPECIES_FILE );
-		complexityOut = new FileWriter( complexityDir.getAbsolutePath() + File.separator
-				+ COMPLEXITY_FILE );
+		complexityOut = new FileWriter( complexityDir.getAbsolutePath() + File.separator + COMPLEXITY_FILE );
+		dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE );
+		
 
 		XmlPersistableRun xmlRun = new XmlPersistableRun( run );
 		complexityOut.write( xmlRun.toComplexityString( isRunCompleted ) );
 		fitnessOut.write( xmlRun.toFitnessString( isRunCompleted ) );
 		speciesOut.write( xmlRun.toSpeciesString( isRunCompleted ) );
+		dataOut.write( buildDataFileContent() );
 	}
 	catch ( Throwable e ) {
 		logger.error( "PresentationEventListener: error storing run", e );
@@ -141,11 +160,76 @@ public void storeRun( boolean isRunCompleted ) {
 				speciesOut.close();
 			if ( fitnessOut != null )
 				fitnessOut.close();
+			if( dataOut != null) {
+				dataOut.close();
+			}
 		}
 		catch ( Exception e ) {
 			logger.error( "error closing presentation files" );
 		}
 	}
+}
+
+@SuppressWarnings("unchecked")
+public String buildDataFileContent() {
+	StringBuilder dataBuilder = new StringBuilder();
+	dataBuilder.append("generation\t");
+	dataBuilder.append("max-score\t");
+	dataBuilder.append("connected-input-neurons\t");
+	dataBuilder.append("connections\t");
+	dataBuilder.append("connected-neurons\t");
+	dataBuilder.append("network-size");
+	
+	
+	List<Generation> generations = (List<Generation>) run.getGenerations();
+	int generation = generations.size();
+	if(0 < generation) {
+		Generation curGen = generations.get(generation-1);
+		Chromosome fittestChromosome = curGen.getGenoType().getFittestChromosome();
+		
+		if(fittestChromosome != null) {
+			
+			SortedSet<Allele> alleles = fittestChromosome.getAlleles();
+			Set<Long> inputNeurons = new HashSet<Long>();
+			Set<Long> neurons = new HashSet<Long>();
+			for(Allele allele : alleles) {
+				if ( allele instanceof NeuronAllele ) {
+					NeuronAllele nAllele = (NeuronAllele) allele;
+					if(nAllele.getType() == NeuronType.INPUT) {
+						inputNeurons.add(nAllele.getId());
+					}
+					neurons.add(nAllele.getId());
+				}
+			}
+			int connectedInputNeurons = 0;
+			int connections = 0;
+			Set<Long> connectedNeurons = new HashSet<Long>();
+			for(Allele allele : alleles) {
+				if ( allele instanceof ConnectionAllele ) {
+					connections++;
+					ConnectionAllele cAllele = (ConnectionAllele) allele;
+					Long srcNeuronId = cAllele.getSrcNeuronId();
+					Long destNeuronId = cAllele.getDestNeuronId();
+					if(inputNeurons.contains(srcNeuronId)) {
+						connectedInputNeurons++;
+					}
+					connectedNeurons.add(srcNeuronId);
+					connectedNeurons.add(destNeuronId);
+					
+				}
+			}
+			int maxScore = fittestChromosome.getFitnessValue();
+			int networkSize = connectedNeurons.size() + connections;
+			
+			dataBuilder.append(generation + "\t");
+			dataBuilder.append(maxScore + "\t");
+			dataBuilder.append(connectedInputNeurons + "\t");
+			dataBuilder.append(connections + "\t");
+			dataBuilder.append(connectedNeurons.size() + "\t");
+			dataBuilder.append(networkSize);
+		}
+	}
+	return dataBuilder.toString();
 }
 
 }
