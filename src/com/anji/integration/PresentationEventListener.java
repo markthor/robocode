@@ -145,8 +145,8 @@ public void storeRun( boolean isRunCompleted ) {
 			dataOut.write( buildDataFileHeaders() );
 		} else {
 			dataOut = new FileWriter( dataDir.getAbsolutePath() + File.separator + DATA_FILE, true );
-			dataOut.write( buildDataFileContent() );
 		}
+		dataOut.write( buildDataFileContent() );
 		
 
 		XmlPersistableRun xmlRun = new XmlPersistableRun( run );
@@ -192,9 +192,9 @@ public String buildDataFileContent() {
 				if ( allele instanceof NeuronAllele ) {
 					NeuronAllele nAllele = (NeuronAllele) allele;
 					if(nAllele.getType() == NeuronType.INPUT) {
-						inputNeurons.add(nAllele.getId());
+						inputNeurons.add(nAllele.getGene().getInnovationId());
 					}
-					neurons.add(nAllele.getId());
+					neurons.add(nAllele.getGene().getInnovationId());
 				}
 			}
 			int connectedInputNeurons = 0;
@@ -218,6 +218,7 @@ public String buildDataFileContent() {
 			int networkSize = connectedNeurons.size() + connections;
 			
 			dataBuilder.append(getCurrentGenerationNumber() + "\t");
+			dataBuilder.append(fittestChromosome.getId() + "\t");
 			dataBuilder.append(maxScore + "\t");
 			dataBuilder.append(connectedInputNeurons + "\t");
 			dataBuilder.append(connections + "\t");
@@ -231,6 +232,7 @@ public String buildDataFileContent() {
 private String buildDataFileHeaders() {
 	StringBuilder dataBuilder = new StringBuilder();
 	dataBuilder.append("generation\t");
+	dataBuilder.append("chromosome-id\t");
 	dataBuilder.append("max-score\t");
 	dataBuilder.append("connected-input-neurons\t");
 	dataBuilder.append("connections\t");

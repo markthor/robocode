@@ -80,7 +80,7 @@ public abstract Allele cloneAllele();
 /**
  * @return gene
  */
-protected Gene getGene() {
+public Gene getGene() {
 	return gene;
 }
 
@@ -167,7 +167,7 @@ public Long getInnovationId() {
  * for hibernate
  * @return chromosome containnig this allele - can be null
  */
-private Chromosome getChromosome() {
+public Chromosome getChromosome() {
 	return chromosome;
 }
 
