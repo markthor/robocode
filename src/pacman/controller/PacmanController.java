@@ -1,7 +1,7 @@
 package pacman.controller;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import com.anji.integration.Activator;
 
 import pacman.game.Constants.DM;
@@ -10,14 +10,13 @@ import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 public class PacmanController extends NeuralPacmanController {
-
 	private boolean activePowerPill;
-	private int powerPillTime;
-	private int powerPillTimeLeft;
-	private int currentLevel;
+	private double powerPillTime;
+	private double powerPillTimeLeft;
+	private int currentLevel = -1;
 	private boolean firstUpdate = true;
-	private int powerPillsInLevel;
-	private int powerPillsEaten;
+	private double pillsInLevel;
+	private double pillsEaten;
 	private int totalScore;
 
 	public PacmanController(Activator nn) {
@@ -62,10 +61,10 @@ public class PacmanController extends NeuralPacmanController {
 		if (game.getCurrentLevel() > currentLevel || firstUpdate) {
 			firstUpdate = false;
 			currentLevel = game.getCurrentLevel();
-			powerPillsInLevel = game.getActivePowerPillsIndices().length;
-			powerPillsEaten = 0;
+			pillsInLevel = game.getPillIndices().length;
+			pillsEaten = 0;
 		} else if(game.wasPillEaten()) {
-			powerPillsEaten++;
+			pillsEaten++;
 		}
 		
 		if (game.wasPowerPillEaten()) {
@@ -79,9 +78,9 @@ public class PacmanController extends NeuralPacmanController {
 			activePowerPill = true;
 			powerPillTime = time;
 			powerPillTimeLeft = time;
-		} else {
+		} else if(activePowerPill){
 			powerPillTimeLeft--;
-			if (powerPillTimeLeft <= 0) {
+			if (powerPillTimeLeft == 0) {
 				activePowerPill = false;
 			}
 		}
@@ -99,9 +98,12 @@ public class PacmanController extends NeuralPacmanController {
 	 */
 	protected double[] getInputFromGameStateAndNode(int node, Game game, MOVE m) {
 		int highestPillCount = 240;
-		int otherInputs = 41;
+		int otherInputs = 42;
 		
-		double[] result = new double[highestPillCount + otherInputs];
+		int totalInputs = otherInputs;
+		//int totalInputs = otherInputs + highestPillCount;
+		
+		double[] result = new double[totalInputs];
 		//All ghosts
 		//All ghost edible
 		//Nearest ghost, next, next, next
@@ -139,15 +141,15 @@ public class PacmanController extends NeuralPacmanController {
 		result[13] = scaleDistance(tempArray[1]);
 		result[14] = scaleDistance(tempArray[2]);
 		result[15] = scaleDistance(tempArray[3]);
-		result[16] = scaleDistance(getGhostEdibleOrDistance(GHOST.BLINKY, game, node));
-		result[17] = scaleDistance(getGhostEdibleOrDistance(GHOST.INKY, game, node));
-		result[18] = scaleDistance(getGhostEdibleOrDistance(GHOST.PINKY, game, node));
-		result[19] = scaleDistance(getGhostEdibleOrDistance(GHOST.SUE, game, node));
+		result[16] = getGhostEdibleOrDistance(GHOST.BLINKY, game, node); //Scales in getGhostEdibleOrDistance
+		result[17] = getGhostEdibleOrDistance(GHOST.INKY, game, node); //Scales in getGhostEdibleOrDistance
+		result[18] = getGhostEdibleOrDistance(GHOST.PINKY, game, node); //Scales in getGhostEdibleOrDistance
+		result[19] = getGhostEdibleOrDistance(GHOST.SUE, game, node); //Scales in getGhostEdibleOrDistance
 		tempArray = getNearestGhostEdibleOrDistance(game, node);
-		result[20] = scaleDistance(tempArray[0]);
-		result[21] = scaleDistance(tempArray[1]);
-		result[22] = scaleDistance(tempArray[2]);
-		result[23] = scaleDistance(tempArray[3]);
+		result[20] = tempArray[0]; //Scales in getNearestGhostEdibleOrDistance
+		result[21] = tempArray[1]; //Scales in getNearestGhostEdibleOrDistance
+		result[22] = tempArray[2]; //Scales in getNearestGhostEdibleOrDistance
+		result[23] = tempArray[3]; //Scales in getNearestGhostEdibleOrDistance
 		//POWER PILL INPUTS
 		tempArray = getDistanceToPowerPills(game, node);
 		result[24] = scaleDistance(tempArray[0]);
@@ -160,28 +162,31 @@ public class PacmanController extends NeuralPacmanController {
 		result[30] = scaleDistance(tempArray[2]);
 		result[31] = scaleDistance(tempArray[3]);
 		result[32] = scaleBoolean(isPowerPillActive(game));
-		result[33] = getPowerPillTimeLeftPercent(game);
-		result[34] = getPowerPillTimeGonePercent(game);
+		result[33] = scalePercentage(getPowerPillTimeLeftPercent(game));
+		result[34] = scalePercentage(getPowerPillTimeGonePercent(game));
 		//MISCELLANEUOS INPUTS
 		result[35] = scaleBoolean(isCurrentDirection(game, node, m));
 		result[36] = scaleDistance(getDistanceToNearestJunction(game, node));
 		result[37] = scaleBoolean(isJunction(game, node));
 		//PILL INPUTS
 		result[38] = scaleDistance(getDistanceToNearestPill(game, node));
-		result[39] = getPercentagePillsLeft(game);
-		result[40] = getPercentagePillsEaten(game);
+		result[39] = scalePercentage(getPercentagePillsLeft(game));
+		result[40] = scalePercentage(getPercentagePillsEaten(game));
+		result[41] = 1d; //Bias node
+		
+		/*
 		tempArray = getDistanceToAllPills(game, node);
-		int k = 41;
+		int k = otherInputs - 1;
 		for (int i = 0; i < tempArray.length; i++) {
 			result[k+i] = scaleDistance(tempArray[i]);
 		}
 		
 		if (tempArray.length != highestPillCount) {
 			for (int i = tempArray.length + otherInputs; i < otherInputs + highestPillCount; i++) {
-				result[i] = Integer.MAX_VALUE;
+				result[i] = getMaxDistance();
 			}
 		}
-		
+		*/
 		return result;
 	}
 
@@ -189,17 +194,22 @@ public class PacmanController extends NeuralPacmanController {
 		int[] allPills = game.getPillIndices();
 		double[] result = new double[allPills.length];
 		for (int i = 0 ; i < allPills.length ; i++) {
-			result[i] = game.getShortestPathDistance(currentNode, allPills[i]);
+			if (game.isPillStillAvailable(allPills[i])) {
+				result[i] = game.getShortestPathDistance(currentNode, allPills[i]);
+			} else {
+				result[i] = getMaxDistance();
+			}
+			
 		}
 		return result;
 	}
 
 	private double getPercentagePillsEaten(Game game) {
-		return (powerPillsEaten / powerPillsInLevel) * 100;
+		return (pillsEaten / pillsInLevel) * 100;
 	}
 
 	private double getPercentagePillsLeft(Game game) {
-		return ((powerPillsInLevel - powerPillsEaten) / powerPillsInLevel) * 100;
+		return ((pillsInLevel - pillsEaten) / pillsInLevel) * 100;
 	}
 
 	private boolean isJunction(Game game, int currentNode) {
@@ -220,11 +230,19 @@ public class PacmanController extends NeuralPacmanController {
 		}
 
 	private double getPowerPillTimeGonePercent(Game game) {
-		return ((powerPillTime-powerPillTimeLeft) / powerPillTime) * 100;
+		if (powerPillTime == 0) {
+			return 0d;
+		} else {
+			return ((powerPillTime-powerPillTimeLeft) / powerPillTime) * 100;
+		}
 	}
 
 	private double getPowerPillTimeLeftPercent(Game game) {
-		return (powerPillTimeLeft / powerPillTime) * 100;
+		if (powerPillTime == 0) {
+			return 0d;
+		} else {
+			return (powerPillTimeLeft / powerPillTime) * 100;
+		}
 	}
 
 	private boolean isPowerPillActive(Game game) {
@@ -233,7 +251,54 @@ public class PacmanController extends NeuralPacmanController {
 
 	private double[] getDistanceToNearestPowerPills(Game game, int currentNode) {
 		double[] result = new double[4];
-		int[] active = game.getActivePillsIndices();
+		int[] active = game.getActivePowerPillsIndices();
+		
+		int distanceToNearestPill = getMaxDistance();
+		int closest = -1;
+		int not = 0;
+		ArrayList<Integer> done = new ArrayList<Integer>();
+		for (int i = 0; i < 4; i++) {
+			for (int p : active) {
+				if (!done.contains(p)) {
+					int d = game.getShortestPathDistance(currentNode, p);
+					if (d != -1) {
+						if (d < distanceToNearestPill) {
+							distanceToNearestPill = d;
+							closest = p;
+						}
+					} else {
+						result[3-not] = getMaxDistance();
+						not++;
+						done.add(p);
+						i++;
+					}
+				} else {
+					continue;
+				}
+			}
+			
+			if (done.size() != active.length) {
+				if (currentNode == -1 || closest == -1) {
+					System.out.println("asd");
+				}
+				result[done.size()] = game.getShortestPathDistance(currentNode, closest);
+				done.add(closest);
+				closest = -1;
+				distanceToNearestPill = getMaxDistance();
+			}
+		}
+		
+		for (int i = 0; i < 4 - active.length; i++) {
+			result[3-i] = getMaxDistance();
+		}
+		
+		return result; 
+		
+		
+		
+		/*
+		double[] result = new double[4];
+		int[] active = game.getActivePowerPillsIndices();
 		
 		ArrayList<Integer> done = new ArrayList<Integer>();
 		for (int i = 0; i < active.length; i++) {
@@ -257,23 +322,96 @@ public class PacmanController extends NeuralPacmanController {
 		}
 		
 		return result;
+		*/
+		
+		
 	}
 
 	private double[] getDistanceToPowerPills(Game game, int currentNode) {
 		double[] result = new double[4];
 		int[] powerPills = game.getPowerPillIndices();
 		for(int i = 0; i < powerPills.length; i++){
-			if (game.isPowerPillStillAvailable(powerPills[i])) {
+			if (game.isPowerPillStillAvailable(i)) {
 				result[i] = game.getShortestPathDistance(currentNode, powerPills[i]);
 				continue;
 			}
-			result[i] = Integer.MAX_VALUE;
+			result[i] = getMaxDistance();
 		}
 		
 		return result;
 	}
 
 	private double[] getNearestGhostEdibleOrDistance(Game game, int currentNode) {
+		double[] result = new double[4];
+		
+		HashMap<GHOST, Double> ghostToDistanceMap = new HashMap<>();
+		for (GHOST g : GHOST.values()) {
+			ghostToDistanceMap.put(g, getGhostEdibleOrDistance(g, game, currentNode));
+		}
+		
+		ArrayList<Double> order = new ArrayList<>();
+		int j = 0;
+		for (GHOST g : GHOST.values()) {
+			for (int i = 0; i < order.size(); i++) {
+				if (order.get(i) > ghostToDistanceMap.get(g)) {
+					j = i;
+					break;
+				}
+			}
+			order.add(j, ghostToDistanceMap.get(g));
+		}
+
+		for (int i = 0; i < result.length; i++) {
+			result[i] = order.get(i);
+		}
+		return result;
+		
+		/*
+		String[] stockArr = new String[stockList.size()];
+		stockArr = stockList.toArray(stockArr);
+		
+		int distanceToNearestGhost = Integer.MAX_VALUE;
+		GHOST closest = null;
+		int not = 0;
+		ArrayList<GHOST> done = new ArrayList<GHOST>();
+		for (int i = 0; i < 4; i++) {
+			for (GHOST g : GHOST.values()) {
+				if (!done.contains(g)) {
+					int d = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(g));
+					if (d != -1) {
+						if (d < distanceToNearestGhost) {
+							distanceToNearestGhost = d;
+							closest = g;
+						}
+					} else {
+						not++;
+						result[4-not] = Integer.MAX_VALUE;
+						done.add(g);
+						i++;
+					}
+				} else {
+					not++;
+					result[4-not] = Integer.MAX_VALUE;
+					done.add(g);
+					i++;
+				}
+			}
+			
+			if (done.size() != 4) {
+				if (isGhostEdible(closest, game)) {
+					result[done.size()] = - game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
+				} else {
+					result[done.size()] = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
+				}
+				done.add(closest);
+				closest = null;
+				distanceToNearestGhost = Integer.MAX_VALUE;
+			}
+		}
+		return result;
+		*/
+		
+		/*
 		double[] result = new double[4];
 		
 		int distanceToNearestGhost = Integer.MAX_VALUE;
@@ -301,24 +439,30 @@ public class PacmanController extends NeuralPacmanController {
 		}
 		
 		return result;
+		*/
 	}
 
 	private double getGhostEdibleOrDistance(GHOST g, Game game, int currentNode) {
-		if (isGhostEdible(g, game)) {
-			return game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(g));
+		int d = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(g));
+		if (d != -1) {
+			if (isGhostEdible(g, game)) {
+				return -scaleDistance(d);
+			} else {
+				return scaleDistance(d);
+			}
 		} else {
-			return - game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(g));
+			return getMaxDistance();
 		}
 	}
 
 	private double[] getDistanceToNearestEdibleGhosts(Game game, int currentNode) {
 		double[] result = new double[4];
 		
-		int distanceToNearestGhost = Integer.MAX_VALUE;
+		int distanceToNearestGhost = getMaxDistance();
 		GHOST closest = null;
 		int not = 0;
 		ArrayList<GHOST> done = new ArrayList<GHOST>();
-		while (done.size() + not != 4) {
+		while (done.size() + not < 4) {
 			for (GHOST g : GHOST.values()) {
 				if (!done.contains(g)) {
 					if (isGhostEdible(g, game)) {
@@ -328,14 +472,20 @@ public class PacmanController extends NeuralPacmanController {
 							closest = g;
 						}
 					} else{
-						result[3-not] = -1;
+						not++;
+						if (not == 5) {
+							System.out.println("asd");
+						}
+						result[4-not] = getMaxDistance();
 					}
 				}
 			}
-			result[done.size()] = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
-			done.add(closest);
-			closest = null;
-			distanceToNearestGhost = Integer.MAX_VALUE;
+			if (done.size() + not != 4) {
+				result[done.size()] = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
+				done.add(closest);
+				closest = null;
+				distanceToNearestGhost = getMaxDistance();
+			}
 		}
 		return result;
 	}
@@ -343,26 +493,69 @@ public class PacmanController extends NeuralPacmanController {
 	private double[] getDistanceToNearestGhosts(Game game, int currentNode) {
 		double[] result = new double[4];
 		
-		int distanceToNearestGhost = Integer.MAX_VALUE;
+		int distanceToNearestGhost = getMaxDistance();
 		GHOST closest = null;
+		int not = 0;
+		ArrayList<GHOST> done = new ArrayList<GHOST>();
+		for (int i = 0; i < 4; i++) {
+			for (GHOST g : GHOST.values()) {
+				if (!done.contains(g)) {
+						int d = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(g));
+						if (d != -1) {
+							if (d < distanceToNearestGhost) {
+								distanceToNearestGhost = d;
+								closest = g;
+							}
+						} else {
+							result[3-not] = getMaxDistance();
+							not++;
+							done.add(g);
+							i++;
+						}
+					}
+				else {
+					continue;
+				}
+			}
+			
+			if (done.size() != 4) {
+				result[done.size()] = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
+				done.add(closest);
+				closest = null;
+				distanceToNearestGhost = getMaxDistance();
+			}
+		}
+		
+		/*
+		GHOST closest = null;
+		int not = 0;
 		ArrayList<GHOST> done = new ArrayList<GHOST>();
 		while (done.size() != 4) {
 			for (GHOST g : GHOST.values()) {
 				if (game.getGhostEdibleTime(g) <= 0 && !done.contains(g)) {
 					int d = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(g));
-					if (d < distanceToNearestGhost) {
-						distanceToNearestGhost = d;
-						closest = g;
+					if (d != -1) {
+						if (d < distanceToNearestGhost) {
+							distanceToNearestGhost = d;
+							closest = g;
+						}
+					} else {
+						result[4-not] = Integer.MAX_VALUE;
+						not++;
+						done.add(g);
 					}
+					
 				}
 			}
-			result[done.size()] = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
-			done.add(closest);
-			closest = null;
-			distanceToNearestGhost = Integer.MAX_VALUE;
+			if (done.size() != 4) {
+				result[done.size()] = game.getShortestPathDistance(currentNode, game.getGhostCurrentNodeIndex(closest));
+				done.add(closest);
+				closest = null;
+				distanceToNearestGhost = Integer.MAX_VALUE;
+			}
 		}
-		
-		return result;
+		*/
+		return result; 
 	}
 
 	protected boolean isGhostEdible(GHOST ghost, Game game) {
@@ -384,17 +577,33 @@ public class PacmanController extends NeuralPacmanController {
 	
 	protected double getDistanceToNearestPill(Game game, int node) {
 		int[] pills = game.getActivePillsIndices();
-//		if(pills.length == 0) {
-//			return 1.0;
-//		}
+		if(pills.length == 0) {
+			return 1.0;
+		}
 		return game.getShortestPathDistance(node, game.getClosestNodeIndexFromNodeIndex(node, pills, DM.PATH));
 	}
 	
 	protected double getDistanceToGhostFromNode(GHOST ghost, Game game, int node) {
-		return game.getShortestPathDistance(node, game.getGhostCurrentNodeIndex(ghost));
+		int d = game.getShortestPathDistance(node, game.getGhostCurrentNodeIndex(ghost));
+		if (d != -1) {
+			return d;
+		} else {
+			return getMaxDistance();
+		}
 	}
 
 	public int getScore() {
 		return totalScore;
+	}
+
+	public void reset() {
+		activePowerPill = false;
+		powerPillTime = 0;
+		powerPillTimeLeft = 0;
+		currentLevel = -1;
+		firstUpdate = true;
+		pillsInLevel = 0;
+		pillsEaten = 0;
+		totalScore = 0;
 	}
 }

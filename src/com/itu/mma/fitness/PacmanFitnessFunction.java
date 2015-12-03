@@ -6,18 +6,13 @@ import java.util.List;
 import org.jgap.BulkFitnessFunction;
 import org.jgap.Chromosome;
 
-import com.anji.integration.Activator;
 import com.anji.integration.ActivatorTranscriber;
 import com.anji.integration.TranscriberException;
-import com.anji.persistence.Persistence;
 import com.anji.util.Properties;
 
 import pacman.Executor;
 import pacman.controller.PacmanController;
-import pacman.controllers.Controller;
 import pacman.controllers.examples.StarterGhosts;
-import pacman.controllers.examples.StarterPacMan;
-import pacman.game.Constants.MOVE;
 
 public class PacmanFitnessFunction implements BulkFitnessFunction {
 
@@ -39,26 +34,26 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void evaluate(List subjects) {
 		List<Chromosome> chromosomes = (List<Chromosome>) subjects;
+		int runs = 10;
+		
 		for (Chromosome chromosome : chromosomes) {
-//			try {
-
-				PacmanController pacManController = null;
-				try {
-					pacManController = new PacmanController(activatorFactory.newActivator(chromosome));
-				} catch (TranscriberException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//				Controller<MOVE> pacManController = new OurPacManController(activatorFactory.newActivator(chromosome));
-
-				Executor exec = new Executor();
+			PacmanController pacManController = null;
+			try {
+				pacManController = new PacmanController(activatorFactory.newActivator(chromosome));
+			} catch (TranscriberException e) {
+				e.printStackTrace();
+			}
+			
+			Executor exec = new Executor();
+			
+			int fitness = 0;
+			for (int i = 0; i < runs; i++) {
 				exec.runGame(pacManController, new StarterGhosts(), false, 0);
-
-				// TODO: Uncomment when implemented
-				chromosome.setFitnessValue(pacManController.getScore());
-//			} catch (TranscriberException e) {
-//				e.printStackTrace();
-//			}
+				fitness += pacManController.getScore();
+				pacManController.reset();
+			}
+			
+			chromosome.setFitnessValue(fitness / runs);
 		}
 	}
 
