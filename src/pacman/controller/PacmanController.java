@@ -103,10 +103,10 @@ public class PacmanController extends NeuralPacmanController {
 		int otherInputs = 42;
 		boolean irrelevant = true;
 		
-		int totalInputs = otherInputs;
+		int totalInputs = otherInputs + highestPillCount;
 		//int totalInputs = otherInputs + highestPillCount;
 		
-		double[] result = new double[totalInputs * 2];
+		double[] result = new double[totalInputs];
 		//All ghosts
 		//All ghost edible
 		//Nearest ghost, next, next, next
@@ -178,7 +178,7 @@ public class PacmanController extends NeuralPacmanController {
 		result[41] = 1d; //Bias node
 		
 		int k = otherInputs - 1;
-		/*
+		
 		tempArray = getDistanceToAllPills(game, node);
 		
 		for (int i = 0; i < tempArray.length; i++) {
@@ -190,14 +190,15 @@ public class PacmanController extends NeuralPacmanController {
 				result[i] = getMaxDistance();
 			}
 		}
-		*/
-		k = 0;
+		/*
+		k = totalInputs;
 		if (irrelevant) {
 			Random r = new Random();
 			for (int i = 0; i < totalInputs; i++) {
 				result[k+i] = r.nextDouble();
 			}
 		}
+		*/
 		
 		return result;
 	}
