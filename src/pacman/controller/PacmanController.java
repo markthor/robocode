@@ -177,8 +177,8 @@ public class PacmanController extends NeuralPacmanController {
 		result[40] = scalePercentage(getPercentagePillsEaten(game));
 		result[41] = 1d; //Bias node
 		
-		int k = otherInputs - 1;
-		
+		int k = otherInputs;
+		/*
 		tempArray = getDistanceToAllPills(game, node);
 		
 		for (int i = 0; i < tempArray.length; i++) {
