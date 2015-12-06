@@ -100,7 +100,7 @@ public class PacmanController extends NeuralPacmanController {
 	 */
 	protected double[] getInputFromGameStateAndNode(int node, Game game, MOVE m) {
 		int highestPillCount = 240;
-		int otherInputs = 42;
+		int otherInputs = 14;
 		boolean irrelevant = true;
 		
 		int totalInputs = otherInputs;// + highestPillCount;
@@ -126,7 +126,7 @@ public class PacmanController extends NeuralPacmanController {
 		//game.getPacmanNumberOfLivesRemaining()
 		double tempArray[];
 		
-		
+		/*
 		//GHOST INPUTS
 		result[0] = scaleDistance(getDistanceToGhostFromNode(GHOST.BLINKY, game, node));
 		result[1] = scaleDistance(getDistanceToGhostFromNode(GHOST.INKY, game, node));
@@ -178,7 +178,7 @@ public class PacmanController extends NeuralPacmanController {
 		result[39] = scalePercentage(getPercentagePillsLeft(game));
 		result[40] = scalePercentage(getPercentagePillsEaten(game));
 		result[41] = 1d; //Bias node
-		
+		*/
 		int k = otherInputs;
 
 		/*
@@ -195,7 +195,7 @@ public class PacmanController extends NeuralPacmanController {
 		}
 		*/
 		
-		/*
+		
 		//14 Inputs!!!!!!
 		tempArray = getDistanceToNearestGhosts(game, node);
 		result[0] = scaleDistance(tempArray[0]);
@@ -214,7 +214,7 @@ public class PacmanController extends NeuralPacmanController {
 		result[11] = scaleDistance(tempArray[3]);
 		result[12] = scaleDistance(getDistanceToNearestPill(game, node));
 		result[13] = 1d; //Bias node
-		*/
+		
 		/*
 		k = totalInputs;
 		if (irrelevant) {

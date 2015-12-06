@@ -65,6 +65,12 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 		
 		
 		if (high > 6000) {
+			try {
+				System.in.read();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			PacmanController pacManController = null;
 			try {
 				pacManController = new PacmanController(activatorFactory.newActivator(best));
