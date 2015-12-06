@@ -36,6 +36,9 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 		List<Chromosome> chromosomes = (List<Chromosome>) subjects;
 		int runs = 30;
 		
+		int high = 0;
+		Chromosome best = null;
+		
 		for (Chromosome chromosome : chromosomes) {
 			PacmanController pacManController = null;
 			try {
@@ -54,6 +57,22 @@ public class PacmanFitnessFunction implements BulkFitnessFunction {
 			}
 			
 			chromosome.setFitnessValue(fitness / runs);
+			
+			if (fitness / runs > high) {
+				best = chromosome;
+			}
+		}
+		
+		
+		if (high > 6000) {
+			PacmanController pacManController = null;
+			try {
+				pacManController = new PacmanController(activatorFactory.newActivator(best));
+			} catch (TranscriberException e) {
+				e.printStackTrace();
+			}
+			Executor exec = new Executor();
+			exec.runGame(pacManController, new StarterGhosts(), true, 40);
 		}
 	}
 
